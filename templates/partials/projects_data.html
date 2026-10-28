@@ -132,8 +132,37 @@ var NOTES = [
      "KDF EDMS needed RBAC from the first commit, not later. That meant the user model had to be designed around roles, not added to afterwards. Django's swap-user recommendation saved me a week of migration cascades.",
      "I modelled roles as data, not code. A Role row has a name and permissions. A User belongs to a Role. Permissions are checked by middleware, not scattered through views. Adding a new role is an admin action, not a deployment.",
      "MFA was the part that almost broke the design. Django doesn't ship a second-factor framework, so I used TOTP with a custom verification view. Design the auth flow as its own subsystem."
+   ]},
+  {id:"github-sync", title:"Syncing my portfolio with the GitHub API", date:"2026",
+   summary:"I wanted my portfolio to automatically show my latest repos without manually updating a JSON array. Here is how I built a cached API fetcher in Django.",
+   body:[
+     "The problem: I was manually copying and pasting my project descriptions into a static array. When I updated a repo on GitHub, my portfolio stayed stale.",
+     "The solution: I wrote a small utility in Django that hits the GitHub REST API, fetches my public repos, and caches the JSON response in memory for 12 hours. This keeps me well under the 60 requests/hour rate limit.",
+     "The hard part: Rate limits. Unauthenticated API calls are capped aggressively. I had to add a Personal Access Token (PAT) to the request headers. The token requires zero scopes, so it can only read public data — it cannot touch private repos.",
+     "The merge logic: I use JavaScript on the client side to match the GitHub repo names (e.g., 'ufa_website') to my manual project slugs (e.g., 'ufa'). If a match is found, it updates the description and adds a 'Live on GitHub' badge."
+   ]},
+   
+  {id:"token-gated-pages", title:"Token-gated case studies without user accounts", date:"2026",
+   summary:"How I built private project pages for recruiters without building a full authentication system.",
+   body:[
+     "The problem: Some of my ongoing projects are private. I wanted to share the architecture and case study with specific recruiters, but I didn't want to build a full login/registration flow.",
+     "The solution: I built a 'Magic Link' system. Each private project has a unique, 32-byte URL-safe token. The link looks like /access/p/edms-private/?t=xyz.",
+     "The Django model: I created a ProjectGated model. It stores the narrative, the design decisions, and the token. The view checks if the token in the URL matches the token in the database.",
+     "Security: If the token is wrong or missing, the site does not return a 404 (which would confirm the page exists). Instead, it returns a 200 OK with a generic 'Request Access' message. This prevents attackers from enumerating which projects are private.",
+     "Revocation: If a link is leaked, I can click 'Rotate Token' in the Django admin. The old link instantly dies, and I can send the new one to the client."
+   ]},
+   
+  {id:"canvas-depth", title:"Creating cinematic depth with Canvas and CSS", date:"2026",
+   summary:"I wanted the hero section to feel like a deep, 3D data mesh. Here is how I used a 2D canvas with CSS blur to fake depth of field.",
+   body:[
+     "The goal: A background that felt like a deep server room or a holographic data stream, without using heavy WebGL libraries like Three.js.",
+     "The canvas: I wrote a particle system that draws glowing nodes and connects them with lines if they are close to each other. I added a subtle mouse-repulsion force so the mesh reacts to the user.",
+     "The CSS magic: A 2D canvas looks flat by default. To create depth, I applied filter: blur(60px) saturate(1.5) to the canvas via CSS. This blurs the particles into soft, out-of-focus lights.",
+     "The mask: I used mask-image: radial-gradient(...) to fade the canvas into the background at the edges. This creates a 'spotlight' effect behind the hero text.",
+     "Result: A cinematic, 3D-looking environment that runs at 60fps on mobile and respects prefers-reduced-motion for accessibility."
    ]}
 ];
+
 
 
 

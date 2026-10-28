@@ -31,12 +31,32 @@
 
 /* light theme */
 :root[data-theme="light"]{
-  --bg:#f6f2ea;--bg-2:#efe9dd;--panel:#fffdf8;--panel-2:#f3eee2;
-  --ink:#14213a;--mut:#56627a;--mut-2:#8895ab;
-  --line:#d9d2c3;--line-2:#c9c1ae;
-  --acc:#007c91;--acc-ink:#fff;--acc-soft:rgba(0,124,145,.10);
-  --warn:#a15c00;--ok:#0e8a5f;
-  --grad:linear-gradient(135deg,#007c91 0%,#3b5bdb 55%,#7048e8 100%);
+  /* Warm parchment base, not pure white */
+  --bg:#ede8df;        /* Background */
+  --bg-2:#e3ddd1;      /* Deep background */
+  --panel:#f4efe5;     /* Card background (soft bone) */
+  --panel-2:#e8e2d5;   /* Inner card */
+  
+  /* Text */
+  --ink:#1c1620;       /* Dark espresso */
+  --mut:#5c5254;       /* Warm grey */
+  --mut-2:#8c8280;
+  
+  /* Borders */
+  --line:#d1c8b8;
+  --line-2:#bfb4a3;
+  
+  /* Halloween Accents */
+  --acc:#d44b00;       /* Pumpkin Orange */
+  --acc-ink:#fff;
+  --acc-soft:rgba(212,75,0,0.08);
+  
+  --warn:#a15c00;      /* Amber */
+  --ok:#0e8a5f;        /* Keep green for status */
+  
+  /* Gradient: Pumpkin to deep plum/purple */
+  --grad:linear-gradient(135deg, #d44b00 0%, #7a1f58 100%);
+  
   color-scheme:light;
 }
 
@@ -426,3 +446,272 @@ dialog#noteDialog::backdrop{background:rgba(4,8,18,.55);backdrop-filter:blur(6px
 .note-close{margin-left:auto;flex-shrink:0}
 .note-body{padding:22px;overflow:auto;line-height:1.65}
 .note-body p{margin:0 0 1em;color:var(--ink)}
+
+/* Deep animated background */
+.hero {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+}
+#bgCanvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  pointer-events: none;
+  /* Fade the edges so it blends into the page */
+  mask-image: radial-gradient(ellipse at 50% 50%, #000 40%, transparent 80%);
+  -webkit-mask-image: radial-gradient(ellipse at 50% 50%, #000 40%, transparent 80%);
+}
+.hero h1, .hero p, .hero .cta, .hero .card, .hero .eyebrow {
+  position: relative;
+}
+
+/* =========================================================
+   DEEP BACKGROUND (v2)
+   ========================================================= */
+.hero {
+  position: relative;
+  isolation: isolate;
+  overflow: visible; /* Let the canvas bleed out */
+  padding-top: 120px;
+  padding-bottom: 80px;
+}
+
+#bgCanvas {
+  position: absolute;
+  /* Make it much larger than the hero to create depth */
+  top: -20%;
+  left: -10%;
+  width: 120%;
+  height: 140%;
+  z-index: -1;
+  pointer-events: auto; /* Allow mouse tracking */
+  filter: blur(20px); /* Softens the nodes into a dreamy haze */
+  opacity: 0.8;
+  /* Fade the edges heavily */
+  mask-image: radial-gradient(ellipse at 50% 50%, #000 20%, transparent 70%);
+  -webkit-mask-image: radial-gradient(ellipse at 50% 50%, #000 20%, transparent 70%);
+}
+
+/* Add a vignette over the whole body so the edges are dark */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  pointer-events: none;
+  background: radial-gradient(circle at 50% 50%, transparent 40%, var(--bg) 100%);
+}
+
+/* Ensure text sits above the canvas */
+.hero h1, .hero p, .hero .cta, .hero .card, .hero .eyebrow {
+  position: relative;
+  z-index: 1;
+}
+
+/* =========================================================
+   CINEMATIC DEEP BACKGROUND (v3)
+   ========================================================= */
+#bgCanvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -2;
+  pointer-events: none;
+  filter: blur(60px) saturate(1.5); /* Massive blur for depth of field */
+  opacity: 0.6;
+}
+
+/* Add a dark overlay mask over the background so text pops */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: radial-gradient(
+    circle at 50% 50%, 
+    transparent 0%, 
+    rgba(11, 18, 32, 0.4) 40%, 
+    var(--bg) 90%
+  );
+}
+
+/* Ensure hero section doesn't hide the background */
+.hero {
+  position: relative;
+  background: transparent;
+}
+
+/* =========================================================
+   TRUST MARQUEE
+   ========================================================= */
+.marquee-container {
+  overflow: hidden;
+  width: 100%;
+  background: var(--panel);
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  padding: 16px 0;
+  margin: 32px 0;
+  display: flex;
+  align-items: center;
+}
+
+.marquee-content {
+  display: flex;
+  gap: 32px;
+  white-space: nowrap;
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  color: var(--mut);
+  letter-spacing: 0.1em;
+  animation: scroll 25s linear infinite;
+}
+
+.marquee-content span {
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.marquee-content span:nth-child(even) {
+  color: var(--acc);
+  opacity: 0.5;
+}
+
+/* Pause on hover */
+.marquee-container:hover .marquee-content {
+  animation-play-state: paused;
+}
+
+@keyframes scroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); } /* Assumes content is duplicated exactly once */
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee-content { animation: none; flex-wrap: wrap; justify-content: center; }
+}
+
+/* =========================================================
+   BOKEH DUST DRIFT BACKGROUND
+   ========================================================= */
+body {
+  background-color: #0b1220; /* Fallback deep navy */
+}
+
+#bgCanvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -2;
+  pointer-events: none;
+  /* This creates the camera lens effect and chromatic fringe */
+  filter: blur(2px) contrast(1.1) saturate(1.2);
+  opacity: 0.9;
+}
+
+/* Add a dark vignette over the whole body so text pops */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: radial-gradient(
+    circle at 50% 50%, 
+    transparent 30%, 
+    rgba(11, 18, 32, 0.6) 70%, 
+    #0b1220 100%
+  );
+}
+
+/* Ensure sections don't block the background */
+section {
+  background: transparent;
+  border-top: 1px solid rgba(255, 255, 255, 0.05); /* Subtle lines */
+}
+
+.hero {
+  position: relative;
+}
+
+/* =========================================================
+   FLOATING CARDS & LIGHT MODE FIX
+   ========================================================= */
+
+/* 1. Hide the dark canvas animation in Light Mode */
+:root[data-theme="light"] #bgCanvas {
+  display: none !important;
+}
+
+:root[data-theme="light"] body {
+  background: 
+    radial-gradient(circle at 15% 50%, rgba(212, 75, 0, 0.03), transparent 50%),
+    radial-gradient(circle at 85% 30%, rgba(122, 31, 88, 0.03), transparent 50%),
+    var(--bg) !important;
+  background-attachment: fixed;
+}
+
+/* 2. Turn section wraps into floating cards */
+section {
+  border-top: none !important; /* Remove the flat lines */
+  padding: 40px 0;
+}
+
+section > .wrap:not(.hero) {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  padding: 40px;
+  box-shadow: 0 20px 40px -20px rgba(0, 0, 0, 0.5);
+  position: relative;
+}
+
+/* Subtle glass effect for dark mode cards */
+:root:not([data-theme="light"]) section > .wrap:not(.hero) {
+  background: rgba(17, 28, 51, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Ensure light mode cards look crisp */
+:root[data-theme="light"] section > .wrap:not(.hero) {
+  background: var(--panel); /* Soft bone/parchment */
+  border: 1px solid var(--line);
+  /* Warm shadow */
+  box-shadow: 0 12px 40px -15px rgba(60, 40, 20, 0.12);
+}
+
+/* 3. Adjust the hero section for light mode */
+:root[data-theme="light"] .hero p.lead,
+:root[data-theme="light"] .hero h1 {
+  color: var(--ink); /* Dark ink on light background */
+  text-shadow: none;
+}
+
+/* 4. Make nested cards (like project cards) slightly different */
+section > .wrap > .grid > .card {
+  background: var(--bg-2);
+  border: 1px solid var(--line);
+}
+
+:root[data-theme="light"] section > .wrap > .grid > .card {
+  background: #f9f8f6;
+  border: 1px solid #ebe6dc;
+}
+
+/* Ensure images and canvases don't break out of the cards */
+section > .wrap {
+  overflow: hidden;
+}
+
+
+

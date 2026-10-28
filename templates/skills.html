@@ -19,8 +19,44 @@
 <p class="note" style="margin-top:2em"><b>Levels:</b> Learning (studying) · Familiar (small exercises) · Working knowledge (coursework) · Project experience (shipped in a real project).</p>
 </div></section>
 
+<!-- Load the data inside a script tag -->
 <script>
   {% include "partials/projects_data.html" %}
+
+  // Expanded Skills list
+  var SKILLS = [
+    // Languages
+    {n:"Python", c:"Programming languages", l:"Project experience", p:["edms","tl","chama","certverify"]},
+    {n:"JavaScript / Node.js", c:"Programming languages", l:"Project experience", p:["ufa","ufa-django"]},
+    {n:"SQL", c:"Programming languages", l:"Project experience", p:["edms","ufa"]},
+    {n:"Rust", c:"Programming languages", l:"Familiar", p:[]},
+    {n:"HTML5 & CSS3", c:"Programming languages", l:"Project experience", p:["ufa","study"]},
+
+    // Backend
+    {n:"Django", c:"Backend development", l:"Project experience", p:["edms","ufa-django","certverify"]},
+    {n:"Express", c:"Backend development", l:"Project experience", p:["ufa"]},
+    {n:"REST APIs", c:"Backend development", l:"Project experience", p:["ufa","study"]},
+
+    // Frontend
+    {n:"SvelteKit", c:"Frontend development", l:"Project experience", p:["study"]},
+    {n:"React", c:"Frontend development", l:"Familiar", p:[]},
+    {n:"Canvas & Web Animations", c:"Frontend development", l:"Project experience", p:["chama"]},
+
+    // Data
+    {n:"MySQL", c:"Databases", l:"Project experience", p:["edms"]},
+    {n:"Supabase / Postgres", c:"Databases", l:"Project experience", p:["ufa"]},
+    {n:"Schema Design", c:"Databases", l:"Project experience", p:["edms"]},
+
+    // Security
+    {n:"Authentication & RBAC", c:"Security", l:"Project experience", p:["edms"]},
+    {n:"MFA / TOTP", c:"Security", l:"Project experience", p:["edms"]},
+    {n:"Cryptography (Hash Chains)", c:"Security", l:"Working knowledge", p:["chama"]},
+
+    // UI/UX
+    {n:"Figma", c:"UI/UX", l:"Working knowledge", p:["edms"]},
+    {n:"Design Systems", c:"UI/UX", l:"Project experience", p:["edms"]}
+  ];
 </script>
+
 <script src="/static/js/skills-page.js"></script>
 {% endblock %}

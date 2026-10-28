@@ -4,12 +4,47 @@
 
   function uniq(a){ return a.filter(function(v,i){ return a.indexOf(v) === i; }); }
 
+  // === AUTO-ADD NEW SKILLS FROM GITHUB ===
+  // 1. Find all technologies used in all projects
+  var allProjectTech = uniq([].concat.apply([], PROJECTS.map(function(p){ return p.tech || []; })));
+  
+  // 2. Find which of those are not yet in the SKILLS array
+  var existingSkillNames = SKILLS.map(function(s){ return s.n.toLowerCase(); });
+  var newSkills = [];
+  
+  allProjectTech.forEach(function(tech) {
+    if (existingSkillNames.indexOf(tech.toLowerCase()) === -1) {
+      // Add it as a new skill automatically
+      newSkills.push({
+        n: tech,
+        c: "Auto-detected (GitHub)",
+        l: "Familiar",
+        p: [] // We'll fill this in below
+      });
+      existingSkillNames.push(tech.toLowerCase());
+    }
+  });
+
+  // 3. Append the new skills to SKILLS
+  SKILLS = SKILLS.concat(newSkills);
+
+  // 4. Link the new skills back to the projects that use them
+  newSkills.forEach(function(skill) {
+    PROJECTS.forEach(function(p) {
+      if (p.tech && p.tech.indexOf(skill.n) > -1) {
+        skill.p.push(p.id);
+      }
+    });
+  });
+  // =======================================
+
   var sq = document.getElementById("sq");
   var sc = document.getElementById("sc");
   var list = document.getElementById("skillList");
   var detail = document.getElementById("skillDetail");
   var selected = null;
 
+  // Populate categories (including the new "Auto-detected" one)
   uniq(SKILLS.map(function(s){ return s.c; })).forEach(function(c){
     var o = document.createElement("option"); o.value = c; o.textContent = c; sc.appendChild(o);
   });
@@ -21,6 +56,13 @@
     var items = SKILLS.filter(function(s){
       return (!cat || s.c === cat) && (!q || s.n.toLowerCase().indexOf(q) > -1);
     });
+    
+    // Sort so "Project experience" comes first, then "Familiar", etc.
+    items.sort(function(a, b) {
+      var levels = ["Project experience", "Working knowledge", "Familiar", "Learning"];
+      return levels.indexOf(a.l) - levels.indexOf(b.l);
+    });
+
     if (!items.length){
       var p = document.createElement("p"); p.textContent = "No skills match.";
       list.appendChild(p); return;
@@ -55,7 +97,7 @@
       var proj = PROJECTS.filter(function(x){ return x.id === id; })[0];
       if (!proj) return;
       var li = document.createElement("li");
-      var a = document.createElement("a"); a.href = "/projects/#p-" + id; a.textContent = proj.t;
+      var a = document.createElement("a"); a.href = "/projects/" + (proj.slug || proj.id) + "/"; a.textContent = proj.t;
       li.appendChild(a);
       li.appendChild(document.createTextNode(" (" + proj.s + ")"));
       ul.appendChild(li);
