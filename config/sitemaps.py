@@ -10,10 +10,10 @@ class StaticViewSitemap(Sitemap):
     priority = 0.7
 
     def items(self):
+        # Removed the "project_detail" placeholder that was causing duplicate home URLs
         return [
             ("home", 1.0),
             ("projects", 0.9),
-            ("project_detail", 0.8),   # handled below, one per project
             ("skills", 0.8),
             ("experience", 0.7),
             ("cv", 0.6),
@@ -25,8 +25,6 @@ class StaticViewSitemap(Sitemap):
 
     def location(self, item):
         name, _priority = item
-        if name == "project_detail":
-            return reverse("home")  # replaced by the ProjectsSitemap below
         return reverse(name)
 
     def priority(self, item):
@@ -34,14 +32,14 @@ class StaticViewSitemap(Sitemap):
 
 
 class ProjectsSitemap(Sitemap):
-    """One URL per public project. Slugs mirror PROJECTS[].slug."""
+    """One URL per public project."""
 
     protocol = "https"
     changefreq = "monthly"
     priority = 0.8
 
-    # Keep in sync with templates/partials/projects_data.html
-    _slugs = ["edms", "ufa", "study", "trustledger", "chamatrust"]
+    # Updated to include the two new projects
+    _slugs = ["edms", "ufa", "study", "trustledger", "chamatrust", "certverify", "ufa-django"]
 
     def items(self):
         return self._slugs
@@ -51,7 +49,7 @@ class ProjectsSitemap(Sitemap):
 
 
 class NotesSitemap(Sitemap):
-    """One URL per note. Keep in sync with contact/views.py _NOTES."""
+    """One URL per note."""
 
     protocol = "https"
     changefreq = "yearly"
