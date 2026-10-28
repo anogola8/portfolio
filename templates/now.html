@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}Now — Dericks Omondi{% endblock %}
+
+{% block content %}
+<section><div class="wrap" style="max-width:760px" data-reveal>
+<div class="eyebrow">Now</div>
+<h1 style="font-size:clamp(2rem,5vw,3rem)">What I'm doing now</h1>
+<p style="color:var(--mut);margin-bottom:2em">Updated <span class="mono" id="updated"></span>. A snapshot of current work, learning, and what I'm looking for.</p>
+
+<h2 style="font-size:1.2rem;margin-top:2em">Building</h2>
+<p>The KDF EDMS Django app — converting the 52-screen Figma prototype into working views, one role at a time.</p>
+
+<h2 style="font-size:1.2rem;margin-top:2em">Learning</h2>
+<p>Digital signatures (Ed25519), Merkle-tree reconciliation, and offline-first sync patterns for the ChamaTrust design study.</p>
+
+<h2 style="font-size:1.2rem;margin-top:2em">Writing</h2>
+<p>Technical notes on the portfolio: hash-chain limitations, the MySQL → Supabase migration, and designing RBAC that survives the second feature.</p>
+
+<h2 style="font-size:1.2rem;margin-top:2em">Looking for</h2>
+<p>Internships or entry-level roles in backend or full-stack development, ideally in Kenya or remote-friendly. Also open to freelance work and collaborative projects.</p>
+
+<p style="margin-top:3em;color:var(--mut);font-size:.9rem">This is a <a href="https://nownownow.com/about">/now page</a>. If you have something I should be doing, <a href="/contact/">tell me</a>.</p>
+</div></section>
+
+<script>
+  var el = document.getElementById("updated");
+  if (el) {
+    el.textContent = new Date(document.lastModified).toLocaleDateString(undefined,
+      {year:"numeric", month:"short", day:"numeric"});
+  }
+</script>
+{% endblock %}

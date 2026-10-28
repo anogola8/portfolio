@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /
+
+# Never index or follow gated case-study URLs
+Disallow: /access/
+Disallow: /manage-site/
+Disallow: /api/
+
+# Sitemap
+Sitemap: {{ request.scheme }}://{{ request.get_host }}/sitemap.xml

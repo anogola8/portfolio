@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}{{ note.title }} — Dericks Omondi{% endblock %}
+{% block nav_notes %}on{% endblock %}
+
+{% block content %}
+<section><div class="wrap" style="max-width:760px" data-reveal>
+<div class="eyebrow">{{ note.date }}</div>
+<h1 style="font-size:clamp(1.8rem,4vw,2.6rem)">{{ note.title }}</h1>
+<p style="color:var(--mut);font-size:1.05rem">{{ note.summary }}</p>
+
+<div style="margin-top:2em;line-height:1.75;font-size:1.02rem">
+  {% for p in note.body %}<p>{{ p }}</p>{% endfor %}
+</div>
+
+<p style="margin-top:3em"><a href="/notes/">← All notes</a></p>
+</div></section>
+{% endblock %}

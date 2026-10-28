@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Technical notes — Dericks Omondi{% endblock %}
+{% block nav_notes %}on{% endblock %}
+
+{% block content %}
+<section><div class="wrap" data-reveal>
+<div class="eyebrow">Writing</div>
+<h1 style="font-size:clamp(2rem,5vw,3rem)">Technical notes</h1>
+<p style="color:var(--mut);max-width:62ch;margin-bottom:2em">Short, honest write-ups from things I actually built. Not tutorials — what I tried, what broke, what I changed my mind about.</p>
+
+<div id="notesList" class="grid g2"></div>
+</div></section>
+
+{% include "partials/projects_data.html" %}
+
+<script src="/static/js/notes-page.js"></script>
+{% endblock %}

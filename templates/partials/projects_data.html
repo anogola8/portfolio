@@ -1,0 +1,139 @@
+var PROJECTS = [
+  {id:"edms",  slug:"edms", t:"KDF Enterprise Document Management System", s:"In development",
+   p:"Large organisations need controlled, auditable document handling with strict access rules.",
+   u:"Staff of a large institution (system design project).",
+   c:"Systems analysis, 63-table normalised schema with MySQL DDL, architecture document, and a 52-screen prototype converted into a Django app.",
+   tech:["Python","Django","MySQL"],
+   f:["Role-based access control","Custom user model and MFA flows","CSRF-protected forms","100+ dead UI elements fixed"],
+   sec:"Authentication, RBAC and MFA were part of the first code milestone.",
+   status:"Prototype converted to a functional Django app; still in development.",
+   future:"Testing evidence and deployment notes to be added.",
+   approach:"Started with the schema — 63 normalised tables — before any UI.",
+   hardPart:"MFA without an identity provider. TOTP with backup codes on top of a custom user model.",
+   result:"A working Django app that demonstrates the design. Not deployed.",
+   lessons:"Schema-first pays off in auth and RBAC. It costs when requirements change late.",
+   decisions:[
+     "Schema-first over feature-first — access models can't be retrofitted cleanly",
+     "Custom user model from day one — swap-user migration is painful after data exists",
+     "TOTP over SMS — no carrier dependency, no cost, works offline"
+   ],
+   gated:true, gatedSlug:"edms-private", gatedSummary:"Ongoing — deeper case study available on request."},
+
+  {id:"ufa",   slug:"ufa", t:"UFA Kenya website", s:"Completed",
+   p:"A civic youth organisation needed a public web presence with online payments.",
+   u:"UFA Kenya members and visitors.",
+   c:"Built and deployed the platform; migrated MySQL to Supabase; integrated M-Pesa Daraja.",
+   tech:["Node.js","Express","Supabase","REST APIs"],
+   f:["Full-stack civic platform","M-Pesa Daraja integration","Deployed on Render"],
+   link:"https://github.com/anogola8/ufa_website",
+   sec:"Details to be added.",
+   status:"Deployed; redesign planned.",
+   future:"Redesign per project scope.",
+   approach:"Built against MySQL, then migrated to Supabase when Render's add-on got expensive.",
+   hardPart:"M-Pesa Daraja integration. Callback URL reliability on Render's free tier — solved with a retry queue in Postgres.",
+   result:"Deployed and used by UFA Kenya. Redesign scoped with a 10-week plan.",
+   lessons:"The migration taught me more than the initial build.",
+   decisions:[
+     "Supabase over self-hosted Postgres — free tier was the deciding constraint",
+     "Express over Django — team was JS-native; maintainability beat my preference",
+     "Callback retry queue in the database — Render restarts don't lose payments"
+   ]},
+
+  {id:"study", slug:"study", t:"Study Pro (formerly LectureMate)", s:"Completed",
+   p:"Students struggle to review long lectures.",
+   u:"University students.",
+   c:"Built the web app as my CCS 3353 research project, with a final report and panel presentation.",
+   tech:["SvelteKit","REST APIs"],
+   f:["Lecture transcription via Deepgram","AI summaries via Google Gemini"],
+   sec:"Details to be added.",
+   status:"Academic project completed.",
+   future:"Not planned yet.",
+   approach:"Focused on one measurable outcome: can AI summaries reduce lecture review time?",
+   hardPart:"Latency. Deepgram + Gemini took ~40 seconds per 10-minute lecture. Streaming transcription and background summarisation.",
+   result:"Completed and presented. Small evaluation (n≈12) suggested time savings; sample too small to claim significance.",
+   lessons:"Evaluation is harder than building. Define the metric before writing code.",
+   decisions:[
+     "Deepgram over Whisper — streaming latency is the difference between usable and abandoned",
+     "Gemini over GPT-4 — free tier covered the project",
+     "SvelteKit over React — less ceremony, smaller bundle, matched the deadline"
+   ]},
+
+  {id:"tl",    slug:"trustledger", t:"TrustLedger", s:"Concept",
+   p:"Informal and gig workers lack portable, verifiable proof of their work history.",
+   u:"Domestic workers, artisans, boda boda riders, freelancers, employers, NGOs.",
+   c:"Wrote the project proposal and redesigned its scope.",
+   tech:["Python","Django","REST APIs"],
+   f:["Digitally signed work attestations (planned)","Reference requests (planned)","Shareable verification reports (planned)"],
+   sec:"Planned: cryptographic signatures on attestations.",
+   status:"Proposal only. No software built yet.",
+   future:"Prototype in the final-year project."},
+
+  {id:"chama", slug:"chamatrust", t:"ChamaTrust", s:"Concept",
+   p:"Chama and SACCO field records are easy to dispute or alter, and connectivity is unreliable.",
+   u:"Chama and SACCO treasurers, members and auditors.",
+   c:"Product idea; nothing built yet.",
+   tech:["Python","Django"],
+   f:["Offline-first recording (planned)","Hash chains and signatures (planned)","Merkle-tree reconciliation (planned)","Tamper detection, not tamper-proofing"],
+   sec:"Goal is to detect alteration; no system is claimed to be absolutely tamper-proof.",
+   status:"Concept.",
+   future:"Prototype from the hash-chain demo on the home page."},{id:"certverify", slug:"certverify", t:"CertVerify", s:"Completed",
+   p:"A platform for verifying certificates and credentials.",
+   u:"Students, employers, and institutions.",
+   c:"Built the backend and verification logic.",
+   tech:["Python","Django"],
+   f:["Certificate upload","QR verification"],
+   sec:"Details to be added.",
+   status:"Completed.",
+   future:"Maintenance mode."},
+
+  {id:"ufa-django", slug:"ufa-django", t:"UFA Django Backend", s:"In development",
+   p:"A Django rewrite of the UFA Kenya backend for better maintainability.",
+   u:"UFA administrators.",
+   c:"Building the API and database models.",
+   tech:["Python","Django","REST APIs"],
+   f:["User management","Event tracking"],
+   sec:"Details to be added.",
+   status:"In development.",
+   future:"Migrate existing data."}
+];
+
+var SKILLS = [
+  {n:"Python", c:"Programming languages", l:"Project experience", p:["edms","tl","chama"]},
+  {n:"JavaScript / Node.js", c:"Programming languages", l:"Project experience", p:["ufa"]},
+  {n:"Django", c:"Backend development", l:"Project experience", p:["edms"]},
+  {n:"Express", c:"Backend development", l:"Project experience", p:["ufa"]},
+  {n:"SvelteKit", c:"Frontend development", l:"Project experience", p:["study"]},
+  {n:"React", c:"Frontend development", l:"Familiar", p:[]},
+  {n:"MySQL and data modelling", c:"Databases", l:"Project experience", p:["edms","ufa"]},
+  {n:"Supabase", c:"Databases", l:"Project experience", p:["ufa"]},
+  {n:"REST APIs and integrations", c:"APIs", l:"Project experience", p:["ufa","study"]},
+  {n:"Authentication and RBAC", c:"Security", l:"Project experience", p:["edms"]},
+  {n:"Figma and UI design", c:"UI/UX", l:"Working knowledge", p:[]}
+];
+
+var NOTES = [
+  {id:"hash-chains", title:"Hash chains detect tampering. They don't prevent it.", date:"2026",
+   summary:"When I built the ChamaTrust hash-chain demo, the question was: so it's tamper-proof? No. Here's why that distinction matters.",
+   body:[
+     "A hash chain makes editing history visible. Each record stores the SHA-256 of the previous record plus its own content. Change one record, and every later hash no longer matches. The chain itself has no mechanism to stop you from editing — it can only tell the next reader that you did.",
+     "That's a real property, and it's worth having. But it isn't the same as immutability, and it doesn't prove who did what. An attacker who controls the storage layer can rewrite the whole chain from scratch and it will look internally consistent.",
+     "The fixes: sign the chain head with a key held outside the storage layer, and store the head somewhere the attacker doesn't control. The chain proves order. The signature proves authorship. Neither alone is enough."
+   ]},
+  {id:"supabase-migration", title:"Moving UFA Kenya's site from MySQL to Supabase", date:"2026",
+   summary:"Not a connection-string swap. Every query was audited, and the migration taught me more than the initial build.",
+   body:[
+     "The initial build used MySQL on Render. When the free tier got expensive, Supabase was the obvious target. I assumed I'd change an env var and be done in an hour. It took two days.",
+     "The first surprise was dialect differences. AUTO_INCREMENT doesn't exist in Postgres; SERIAL does. String concatenation is CONCAT() in MySQL and || in Postgres. I found most of these by running the migration and reading errors — not how I'd do it next time.",
+     "What I'd do differently: a query audit before migration, and a staging environment."
+   ]},
+  {id:"rbac-edms", title:"Designing role-based access for a document system", date:"2026",
+   summary:"Role-based access sounds simple until you have 63 tables and need MFA. What I'd keep, and what I'd change.",
+   body:[
+     "KDF EDMS needed RBAC from the first commit, not later. That meant the user model had to be designed around roles, not added to afterwards. Django's swap-user recommendation saved me a week of migration cascades.",
+     "I modelled roles as data, not code. A Role row has a name and permissions. A User belongs to a Role. Permissions are checked by middleware, not scattered through views. Adding a new role is an admin action, not a deployment.",
+     "MFA was the part that almost broke the design. Django doesn't ship a second-factor framework, so I used TOTP with a custom verification view. Design the auth flow as its own subsystem."
+   ]}
+];
+
+
+

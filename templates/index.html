@@ -1,0 +1,197 @@
+{% extends "base.html" %}
+{% block title %}Dericks “Jappy” Omondi — The Digital Workshop{% endblock %}
+{% block nav_home %}on{% endblock %}
+
+{% block content %}
+<div class="wrap hero">
+<div class="eyebrow">The Digital Workshop</div>
+<h1>Building practical technology for real-world problems.</h1>
+<p class="lead">I’m Dericks “Jappy” Omondi, a Business Information Technology student in Kenya. I build full-stack systems, explore secure digital design, and turn real needs into working software.</p>
+<div class="cta">
+<a class="btn p" href="/projects/">Explore my work</a>
+<a class="btn" href="/cv/">View CV</a>
+<a class="btn" href="/contact/">Collaborate</a>
+</div>
+<div class="card snap"><h3 class="mono" style="font-size:.95rem">30-second overview</h3>
+<dl class="grid g3" style="margin:12px 0 0">
+<div><dt>Who</dt><dd>3rd-year BSc BIT, Meru University of Science and Technology (graduating 2027)</dd></div>
+<div><dt>What I build</dt><dd>Django, Node/Express and SvelteKit web apps with databases, auth and API integrations</dd></div>
+<div><dt>Built so far</dt><dd>UFA Kenya website (deployed), Study Pro (academic app), KDF EDMS (in development)</dd></div>
+<div><dt>Seeking</dt><dd id="seekSummary"></dd></div>
+<div><dt>Location</dt><dd>Kenya</dd></div>
+<div><dt>Contact</dt><dd><a href="/contact/">Form</a> · <a href="https://github.com/anogola8" rel="noopener">GitHub</a></dd></div>
+</dl></div>
+</div>
+<div class="wrap" style="padding:0 0 8px">
+  <p class="mono" style="font-size:.78rem;color:var(--mut);letter-spacing:.06em;text-transform:uppercase;margin:0 0 6px">Full pages</p>
+  <p style="margin:0 0 8px">
+    <a class="btn" href="/projects/" style="margin:0 6px 6px 0">All projects</a>
+    <a class="btn" href="/skills/" style="margin:0 6px 6px 0">Skills</a>
+    <a class="btn" href="/experience/" style="margin:0 6px 6px 0">Experience</a>
+    <a class="btn" href="/notes/" style="margin:0 6px 6px 0">Notes</a>
+    <a class="btn" href="/about/" style="margin:0 6px 6px 0">About</a>
+    <a class="btn" href="/cv/" style="margin:0 6px 6px 0">CV</a>
+    <a class="btn" href="/contact/" style="margin:0 6px 6px 0">Contact</a>
+    <a class="btn" href="/now/" style="margin:0 6px 6px 0">Now</a>
+  </p>
+</div>
+<div class="wrap now-wrap" aria-live="polite">
+  <div id="nowStrip" class="now-strip" role="status">
+    <span class="now-tag">Building</span>
+    <span class="now-text">…</span>
+    <span class="now-date mono"></span>
+  </div>
+</div>
+
+<section id="work"><div class="wrap">
+<div class="eyebrow">Featured work</div><h2>Projects</h2>
+<p style="color:var(--mut)">Each project shows its honest status. Concepts are labelled as concepts.</p>
+<div class="tools">
+<input id="q" type="search" placeholder="Search projects" aria-label="Search projects">
+<select id="fs" aria-label="Filter by status"><option value="">All statuses</option></select>
+<select id="ft" aria-label="Filter by technology"><option value="">All technologies</option></select>
+</div>
+<div id="projList" class="grid g2" aria-live="polite"></div>
+</div></section>
+
+<section id="skills"><div class="wrap">
+<div class="eyebrow">Skills</div><h2>Skills with evidence</h2>
+<p style="color:var(--mut)">No percentage bars. Each level is tied to something I’ve actually built. Select a skill to see where it was used.</p>
+<div class="tools">
+<input id="sq" type="search" placeholder="Search skills" aria-label="Search skills">
+<select id="sc" aria-label="Filter by category"><option value="">All categories</option></select>
+</div>
+<div id="skillList" class="grid g3"></div>
+<div id="skillDetail" class="card" style="margin-top:16px" aria-live="polite" tabindex="-1">Select a skill to see supporting projects.</div>
+<p class="note"><b>Levels:</b> Learning (studying it) · Familiar (used in small exercises) · Working knowledge (used in coursework) · Project experience (used in a real project). Draft levels—edit in the <code>SKILLS</code> data block.</p>
+</div></section>
+
+<section id="lab"><div class="wrap">
+<div class="eyebrow">Lab demo</div><h2>Hash-chain integrity demo</h2>
+<p style="color:var(--mut)">The idea behind ChamaTrust, in miniature. Each fictional entry includes the previous entry’s SHA-256 hash. Edit any amount and watch every later link break. This demonstrates tamper <em>detection</em>, not tamper-proofing.</p>
+<div id="chain" class="chain"></div>
+<p id="chainMsg" role="status" style="font-weight:600"></p>
+<button class="btn" id="chainReset">Reset demo data</button>
+</div></section>
+
+<section id="opps"><div class="wrap">
+<div class="eyebrow">Availability</div><h2>Open to</h2>
+<div id="oppList" class="card"></div>
+<p class="note noprint">Visitors see these as read-only status; toggle them here to preview how the overview changes. Set permanent defaults in the <code>OPPS</code> data block.</p>
+</div></section>
+
+<section id="map"><div class="wrap">
+<div class="eyebrow">Connections</div><h2>Project and technology map</h2>
+<p style="color:var(--mut)">Pick a project or a technology to see what connects to it. This list-based explorer works with keyboard and on small screens.</p>
+<div class="grid g2"><div><h3>Projects</h3><div id="mapP"></div></div><div><h3>Technologies</h3><div id="mapT"></div></div></div>
+<div id="mapOut" class="card" style="margin-top:16px" aria-live="polite" tabindex="-1">Select a node to see its connections.</div>
+</div></section>
+<section id="constellation"><div class="wrap" data-reveal>
+<div class="eyebrow">Explore</div><h2>Constellation</h2>
+<p style="color:var(--mut);max-width:60ch">Click any node to see its connections. Works with keyboard. An accessible list version of the same data is below the map.</p>
+<div class="const-wrap">
+  <div id="constellation"></div>
+  <div id="constOut" class="card const-out" aria-live="polite" tabindex="-1">Select a node to see its connections.</div>
+</div>
+</div></section>
+<section id="architecture"><div class="wrap" data-reveal>
+<div class="eyebrow">Lab · ChamaTrust</div>
+<h2>System design</h2>
+<p style="color:var(--mut);max-width:62ch">
+ChamaTrust is a concept — nothing built yet — but the architecture below is the design I would build.
+Click any component to see why it exists, the decisions behind it, and how it fails.
+</p>
+<div class="chama-wrap">
+  <div id="chamaDiagram"></div>
+  <div id="chamaOut" class="card chama-out" aria-live="polite" tabindex="-1">
+    Select a component to inspect its design.
+  </div>
+</div>
+<p class="note">A design is not a product. This diagram is what the master prompt asked for: architecture and trade-offs, not marketing.</p>
+</div></section>
+
+<section id="path"><div class="wrap">
+<div class="eyebrow">Timeline</div><h2>Professional path</h2>
+<ol id="tl" style="list-style:none;padding:0;border-left:2px solid var(--acc);margin-left:6px"></ol>
+<p class="note">Only verified entries appear. Exact dates are marked “date to add” until you confirm them in the <code>TIMELINE</code> block.</p>
+</div></section>
+
+<section id="insights"><div class="wrap">
+<div class="eyebrow">Technical notes</div><h2>Insights</h2>
+<p class="note">These are outlines for notes I plan to write, not published articles.</p>
+<div id="notes" class="grid g3"></div>
+</div></section>
+
+<section id="about"><div class="wrap">
+<div class="eyebrow">About</div><h2>How I work</h2>
+<div class="grid g2"><div>
+<p>I’m drawn to problems where software has to be trustworthy: records that can’t quietly change, access that’s properly controlled, and systems that people can actually use.</p>
+<p>I learn by building. My projects span document management with role-based access, a civic organisation’s website with payment integration, and an AI-assisted study tool.</p></div>
+<div><p>I’m pursuing internships, entry-level software roles and freelance work, and I’m interested in security, offline-first design and digital trust for Kenya and the wider African market.</p>
+<p class="note">Draft copy based on the facts I have. Refine it in the <code>ABOUT</code> block.</p></div></div>
+</div></section>
+
+<section id="cv"><div class="wrap cvp">
+<div class="eyebrow">CV</div><h2>Curriculum vitae</h2>
+<div class="cta noprint"><button class="btn p" id="printBtn">Print / save as PDF</button>
+<span class="note" style="margin:0">A pre-made PDF isn’t attached yet. Print this page to PDF, or host your own file and set <code>CV_PDF_URL</code>.</span></div>
+<div class="card">
+<h3>Dericks Omondi (“Jappy”)</h3>
+<p>Kenya · github.com/anogola8 · Instagram @an_ogola</p>
+<h3 style="font-size:1rem">Education</h3>
+<ul><li>BSc Business Information Technology, Meru University of Science and Technology — expected graduation 2027</li>
+<li>Secondary: Homabay High School · Primary: Kora Academy</li></ul>
+<h3 style="font-size:1rem">Leadership</h3>
+<ul><li>2nd Vice Chairperson, United Future Alliance (UFA) Kenya — civic youth organisation; digital and communications work</li></ul>
+<h3 style="font-size:1rem">Projects</h3>
+<ul id="cvProj"></ul>
+<h3 style="font-size:1rem">Work experience, certifications</h3>
+<p><em>[Not published — add verified entries before listing anything here.]</em></p>
+</div></div></section>
+
+<section id="contact"><div class="wrap">
+<div class="eyebrow">Contact</div><h2>Let’s collaborate</h2>
+<div class="grid g2"><form id="cf" class="card" novalidate>
+<label for="cn">Name</label><input id="cn" name="name" autocomplete="name" maxlength="80" aria-describedby="en"><p class="err" id="en"></p>
+<label for="ce">Email</label><input id="ce" name="email" type="email" autocomplete="email" maxlength="120" aria-describedby="ee"><p class="err" id="ee"></p>
+<label for="cs">Subject</label><input id="cs" name="subject" maxlength="100" aria-describedby="es"><p class="err" id="es"></p>
+<label for="cm">Message</label><textarea id="cm" name="message" rows="5" maxlength="1500" aria-describedby="em"></textarea><p class="err" id="em"></p>
+<div style="position:absolute;left:-9999px" aria-hidden="true"><label for="hp">Leave empty</label><input id="hp" tabindex="-1" autocomplete="off"></div>
+<button class="btn p" type="submit">Send message</button>
+<p id="cfMsg" role="status"></p></form>
+<div class="card"><h3>How this form works</h3>
+<p>Messages are validated on the page and again on the server, rate-limited, and stored in this site’s database. I read them in a protected admin area.</p>
+<p class="note">No email is sent automatically. Messages are stored, not delivered, so I check the admin to reply.</p>
+<p><a href="https://github.com/anogola8" rel="noopener">GitHub: anogola8</a></p></div></div>
+</div></section>
+{% endblock %}
+
+{% block body_extra %}
+<dialog id="csDialog" aria-labelledby="csTitle">
+  <div class="cs-backdrop" id="csBackdrop"></div>
+  <article class="cs-panel">
+    <header class="cs-head">
+      <h2 id="csTitle" class="cs-title">Case study</h2>
+      <button class="cs-close btn" aria-label="Close case study">✕ Close</button>
+    </header>
+    <div class="cs-body"></div>
+    <footer class="cs-foot noprint">
+      <a class="btn" href="/#work">Back to projects</a>
+    </footer>
+  </article>
+</dialog>
+<dialog id="noteDialog" aria-labelledby="noteTitle">
+  <article class="note-panel">
+    <header class="note-head">
+      <div>
+        <div class="note-date mono"></div>
+        <h2 id="noteTitle" class="note-title">Note</h2>
+      </div>
+      <button class="note-close btn" aria-label="Close note">✕ Close</button>
+    </header>
+    <div class="note-body"></div>
+  </article>
+</dialog>
+
+<script src="/static/js/homepage.js"></script>
+{% endblock %}

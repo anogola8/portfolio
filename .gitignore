@@ -1,0 +1,10 @@
+.env
+db.sqlite3
+__pycache__/
+*.pyc
+.venv/
+
+# media: keep README, ignore personal PDFs
+media/cv/*.pdf
+!media/cv/README.txt
+staticfiles/

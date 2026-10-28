@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% block title %}Contact — Dericks Omondi{% endblock %}
+{% block nav_contact %}on{% endblock %}
+
+{% block content %}
+<section><div class="wrap" data-reveal>
+<div class="eyebrow">Contact</div>
+<h1 style="font-size:clamp(2rem,5vw,3rem)">Let's collaborate</h1>
+<p style="color:var(--mut);max-width:62ch;margin-bottom:2em">Internships, freelance, collaboration — or just a question. I read everything.</p>
+
+<div class="grid g2">
+<form id="cf" class="card" novalidate>
+  <label for="cn">Name</label>
+  <input id="cn" name="name" autocomplete="name" maxlength="80" aria-describedby="en">
+  <p class="err" id="en"></p>
+
+  <label for="ce">Email</label>
+  <input id="ce" name="email" type="email" autocomplete="email" maxlength="120" aria-describedby="ee">
+  <p class="err" id="ee"></p>
+
+  <label for="cs">Subject</label>
+  <input id="cs" name="subject" maxlength="100" aria-describedby="es">
+  <p class="err" id="es"></p>
+
+  <label for="cm">Message</label>
+  <textarea id="cm" name="message" rows="6" maxlength="1500" aria-describedby="em"></textarea>
+  <p class="err" id="em"></p>
+
+  <div style="position:absolute;left:-9999px" aria-hidden="true">
+    <label for="hp">Leave empty</label><input id="hp" tabindex="-1" autocomplete="off">
+  </div>
+
+  <button class="btn p" type="submit" style="margin-top:8px">Send message</button>
+  <p id="cfMsg" role="status"></p>
+</form>
+
+<div class="card">
+  <h3 style="margin-top:0">How this works</h3>
+  <p>Messages are validated on the page and again on the server, rate-limited, and stored in this site's database. I read them in a protected admin area.</p>
+  <p class="note" style="margin-bottom:0">No email is sent automatically. Messages are stored, not delivered, so I check the admin to reply.</p>
+
+  <h3 style="margin-top:1.5em">Elsewhere</h3>
+  <p style="margin-bottom:6px"><a href="https://github.com/anogola8" rel="noopener">GitHub · anogola8</a></p>
+  <p style="margin:0"><a href="/cv/">Download CV</a></p>
+</div>
+</div>
+</div></section>
+
+<script>
+(function(){
+  var f = document.getElementById("cf");
+  f.addEventListener("submit", function (ev) {
+    ev.preventDefault();
+    var v = {
+      n: document.getElementById("cn").value.trim(),
+      e: document.getElementById("ce").value.trim(),
+      s: document.getElementById("cs").value.trim(),
+      m: document.getElementById("cm").value.trim()
+    };
+    var bad = false;
+    function set(id, msg) { document.getElementById(id).textContent = msg; if (msg) bad = true; }
+    set("en", v.n ? "" : "Please enter your name.");
+    set("ee", /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v.e) ? "" : "Enter a valid email address.");
+    set("es", v.s ? "" : "Please add a subject.");
+    set("em", v.m.length >= 10 ? "" : "Message must be at least 10 characters.");
+    if (document.getElementById("hp").value || bad) {
+      document.getElementById("cfMsg").textContent = bad ? "Please fix the highlighted fields." : "";
+      return;
+    }
+    fetch("/api/contact/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRFToken": (document.cookie.match(/csrftoken=([^;]+)/) || [])[1] || ""
+      },
+      body: JSON.stringify({ name: v.n, email: v.e, subject: v.s, message: v.m, website: "" })
+    }).then(function (r) {
+      return r.json().then(function (d) {
+        document.getElementById("cfMsg").textContent = r.ok
+          ? "Thanks — your message was saved. I'll reply by email."
+          : (d.error || "Something went wrong.");
+        if (r.ok) f.reset();
+      });
+    }).catch(function () {
+      document.getElementById("cfMsg").textContent = "Network error. Please try again.";
+    });
+  });
+})();
+</script>
+{% endblock %}

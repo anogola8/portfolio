@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Skills — Dericks Omondi{% endblock %}
+{% block nav_skills %}on{% endblock %}
+
+{% block content %}
+<section><div class="wrap" data-reveal>
+<div class="eyebrow">Capability</div>
+<h1 style="font-size:clamp(2rem,5vw,3rem)">Skills with evidence</h1>
+<p style="color:var(--mut);max-width:62ch;margin-bottom:2em">No percentage bars. Each level is tied to something I've actually built. Select a skill to see where it was used.</p>
+
+<div class="tools">
+  <input id="sq" type="search" placeholder="Search skills" aria-label="Search skills">
+  <select id="sc" aria-label="Filter by category"><option value="">All categories</option></select>
+</div>
+
+<div id="skillList" class="grid g3"></div>
+<div id="skillDetail" class="card" style="margin-top:16px" aria-live="polite" tabindex="-1">Select a skill to see supporting projects.</div>
+
+<p class="note" style="margin-top:2em"><b>Levels:</b> Learning (studying) · Familiar (small exercises) · Working knowledge (coursework) · Project experience (shipped in a real project).</p>
+</div></section>
+
+<script>
+  {% include "partials/projects_data.html" %}
+</script>
+<script src="/static/js/skills-page.js"></script>
+{% endblock %}

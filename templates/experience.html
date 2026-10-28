@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}Experience — Dericks Omondi{% endblock %}
+{% block nav_experience %}on{% endblock %}
+
+{% block content %}
+<section><div class="wrap" style="max-width:760px" data-reveal>
+<div class="eyebrow">Path</div>
+<h1 style="font-size:clamp(2rem,5vw,3rem)">Experience</h1>
+<p style="color:var(--mut);max-width:62ch">Education, leadership, and milestones. Only verified entries appear.</p>
+
+<h2 style="font-size:1.3rem;margin-top:2.5em">Education</h2>
+<ol class="tl">
+  <li><div class="when mono">Expected 2027</div><div><strong>BSc Business Information Technology</strong> — Meru University of Science and Technology. Final year. Focus on databases, secure web systems, and software engineering.</div></li>
+  <li><div class="when mono">Completed</div><div><strong>Secondary</strong> — Homabay High School</div></li>
+  <li><div class="when mono">Completed</div><div><strong>Primary</strong> — Kora Academy</div></li>
+</ol>
+
+<h2 style="font-size:1.3rem;margin-top:2.5em">Leadership</h2>
+<ol class="tl">
+  <li><div class="when mono">Current</div><div><strong>2nd Vice Chairperson, United Future Alliance (UFA) Kenya</strong> — civic youth organisation. Digital and communications work, including building and deploying the public website.</div></li>
+</ol>
+
+<h2 style="font-size:1.3rem;margin-top:2.5em">Technical milestones</h2>
+<ol class="tl">
+  <li><div class="when mono">In development</div><div><strong>KDF EDMS</strong> — 63-table normalised schema; Django conversion of a 52-screen Figma prototype; RBAC + MFA auth flow.</div></li>
+  <li><div class="when mono">Deployed</div><div><strong>UFA Kenya website</strong> — Express + Supabase + M-Pesa Daraja. MySQL → Supabase migration.</div></li>
+  <li><div class="when mono">Completed</div><div><strong>Study Pro</strong> — CCS 3353 research project. Deepgram + Gemini pipeline. Small evaluation study.</div></li>
+  <li><div class="when mono">Proposal</div><div><strong>TrustLedger</strong> — proposal written; prototype planned as final-year project.</div></li>
+  <li><div class="when mono">Concept</div><div><strong>ChamaTrust</strong> — design study on offline-first cryptographically verifiable audit ledgers.</div></li>
+</ol>
+
+<h2 style="font-size:1.3rem;margin-top:2.5em">Certifications</h2>
+<p style="color:var(--mut);font-style:italic">[Not published — add verified entries before listing.]</p>
+
+<p style="margin-top:3em">
+  <a class="btn p" href="/cv/">View CV</a>
+  <a class="btn" href="/contact/">Contact</a>
+</p>
+</div></section>
+{% endblock %}

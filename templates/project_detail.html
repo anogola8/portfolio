@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+{% block title %}Project — Dericks Omondi{% endblock %}
+{% block nav_projects %}on{% endblock %}
+
+{% block content %}
+<div id="projectRoot" style="min-height:60vh">
+  <section><div class="wrap"><p style="color:var(--mut)">Loading…</p></div></section>
+</div>
+
+<script>
+  {% include "partials/projects_data.html" %}
+
+  (function(){
+    "use strict";
+    var SLUG = "{{ slug|escapejs }}";
+    var project = (typeof PROJECTS !== "undefined" && PROJECTS.find(function(p){ return p.slug === SLUG; }));
+    var root = document.getElementById("projectRoot");
+
+    function esc(s){
+      return String(s == null ? "" : s).replace(/[&<>"']/g, function(c){
+        return {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c];
+      });
+    }
+
+    if (!project) {
+      root.innerHTML =
+        '<section><div class="wrap" style="max-width:760px">' +
+          '<div class="eyebrow">Not found</div>' +
+          '<h1>Project not found</h1>' +
+          '<p style="color:var(--mut)">That project slug doesn&#39;t match anything on the site.</p>' +
+          '<p style="margin-top:2em"><a class="btn" href="/projects/">← All projects</a></p>' +
+        '</div></section>';
+      document.title = "Not found — Dericks Omondi";
+      return;
+    }
+
+    document.title = project.t + " — Dericks Omondi";
+    var statusClass = project.s === "Concept" ? "st concept" : "st";
+    var html = "";
+
+    html += '<section><div class="wrap" style="max-width:820px" data-reveal>';
+    html += '<div class="eyebrow">Project · ' + esc(project.s) + '</div>';
+    html += '<h1 style="font-size:clamp(1.9rem,4.6vw,3rem);max-width:20ch">' + esc(project.t) + '</h1>';
+    if (project.p) html += '<p style="color:var(--mut);font-size:1.1rem;max-width:62ch">' + esc(project.p) + '</p>';
+    html += '<div class="grid g3" style="margin-top:24px">';
+    html += '<div class="card"><div class="mono" style="font-size:.72rem;color:var(--mut);letter-spacing:.08em;text-transform:uppercase">Status</div><div style="margin-top:6px"><span class="' + statusClass + '">' + esc(project.s) + '</span></div></div>';
+    if (project.u) html += '<div class="card"><div class="mono" style="font-size:.72rem;color:var(--mut);letter-spacing:.08em;text-transform:uppercase">Users</div><div style="margin-top:6px">' + esc(project.u) + '</div></div>';
+    if (project.tech && project.tech.length) {
+      html += '<div class="card"><div class="mono" style="font-size:.72rem;color:var(--mut);letter-spacing:.08em;text-transform:uppercase">Stack</div><div style="margin-top:6px">' + project.tech.map(function(t){ return '<span class="tag">' + esc(t) + '</span>'; }).join("") + '</div></div>';
+    }
+    html += '</div></div></section>';
+
+    if (project.approach || project.hardPart || project.result || project.lessons || project.c) {
+      html += '<section><div class="wrap" style="max-width:820px" data-reveal>';
+      html += '<h2 style="font-size:1.4rem;margin-top:0">Case study</h2>';
+      html += '<div class="cs-narrative">';
+      [["My contribution", project.c],["Approach", project.approach],["The hard part", project.hardPart],["Result", project.result],["What I learned", project.lessons]].forEach(function(r){
+        if (!r[1]) return;
+        html += "<dt>" + esc(r[0]) + "</dt><dd>" + esc(r[1]) + "</dd>";
+      });
+      html += '</div></div></section>';
+    }
+
+    if (project.decisions && project.decisions.length) {
+      html += '<section><div class="wrap" style="max-width:820px" data-reveal>';
+      html += '<h2 style="font-size:1.3rem;margin-top:0">Design decisions &amp; trade-offs</h2>';
+      html += '<div class="cs-decisions"><ul>';
+      project.decisions.forEach(function(d){ html += '<li>' + esc(d) + '</li>'; });
+      html += '</ul></div></div></section>';
+    }
+
+    html += '<section><div class="wrap" style="max-width:820px" data-reveal>';
+    html += '<h2 style="font-size:1.3rem;margin-top:0">Details</h2>';
+    html += '<div class="cs-spec">';
+    if (project.f && project.f.length) {
+      html += '<dt>Main features</dt><dd><ul>';
+      project.f.forEach(function(x){ html += '<li>' + esc(x) + '</li>'; });
+      html += '</ul></dd>';
+    }
+    if (project.sec) html += '<dt>Security</dt><dd>' + esc(project.sec) + '</dd>';
+    if (project.status) html += '<dt>Current status</dt><dd>' + esc(project.status) + '</dd>';
+    if (project.future) html += '<dt>Next</dt><dd>' + esc(project.future) + '</dd>';
+    html += '</div></div></section>';
+
+    html += '<section><div class="wrap" style="max-width:820px" data-reveal>';
+    html += '<div class="cta">';
+    if (project.gated && project.gatedSlug) {
+      html += '<a class="btn p" href="/access/p/' + esc(project.gatedSlug) + '/">Request deeper case study</a>';
+    }
+    if (project.link) {
+      html += '<a class="btn" href="' + esc(project.link) + '" rel="noopener" target="_blank">Source code ↗</a>';
+    }
+    html += '<a class="btn" href="/projects/">← All projects</a>';
+    html += '</div>';
+    if (project.gated && project.gatedSummary) {
+      html += '<p class="note" style="margin-top:16px">' + esc(project.gatedSummary) + '</p>';
+    }
+    html += '</div></section>';
+
+    root.innerHTML = html;
+
+    var reveals = root.querySelectorAll("[data-reveal]");
+    if (reveals.length) {
+      if ("IntersectionObserver" in window) {
+        var io = new IntersectionObserver(function(entries){
+          entries.forEach(function(e){
+            if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); }
+          });
+        }, {rootMargin:"0px 0px -10% 0px", threshold:0.05});
+        reveals.forEach(function(el){ io.observe(el); });
+      } else {
+        reveals.forEach(function(el){ el.classList.add("in"); });
+      }
+    }
+  })();
+</script>
+{% endblock %}

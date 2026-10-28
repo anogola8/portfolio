@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}About — Dericks Omondi{% endblock %}
+{% block nav_about %}on{% endblock %}
+
+{% block content %}
+<section><div class="wrap" style="max-width:760px" data-reveal>
+<div class="eyebrow">About</div>
+<h1 style="font-size:clamp(2rem,5vw,3rem)">How I work</h1>
+
+<p style="font-size:1.1rem;color:var(--mut);max-width:62ch">
+I'm drawn to problems where software has to be trustworthy: records that can't quietly change, access that's properly controlled, and systems that people can actually use.
+</p>
+
+<h2 style="font-size:1.3rem;margin-top:2.5em">The path in</h2>
+<p>I'm a final-year Business Information Technology student at Meru University of Science and Technology, graduating 2027. My entry point was curiosity about how systems fail — not how they work when everything is fine, but what happens when the database loses a row, when a payment callback never arrives, when an officer's phone has been offline for three weeks and comes back with new records.</p>
+
+<h2 style="font-size:1.3rem;margin-top:2.5em">The problems that interest me</h2>
+<p>Trust boundaries. Offline-first records. Verifiable work history. Access that survives the second feature. These are the themes that run through my projects — not as theory, but as things I've had to code around.</p>
+
+<h2 style="font-size:1.3rem;margin-top:2.5em">The method</h2>
+<ol class="process">
+  <li><span class="proc-n mono">01</span><h3>Understand the trust boundary</h3><p>Before code, I ask: who is trusted, who is not, what breaks if the boundary shifts.</p></li>
+  <li><span class="proc-n mono">02</span><h3>Schema before screens</h3><p>Data model first — the access model can't be retrofitted cleanly.</p></li>
+  <li><span class="proc-n mono">03</span><h3>Thin vertical slices</h3><p>One complete flow end-to-end before adding the second.</p></li>
+  <li><span class="proc-n mono">04</span><h3>Test the failure modes</h3><p>Bad input fails cleanly. Rate limits, missing MFA, expired tokens.</p></li>
+  <li><span class="proc-n mono">05</span><h3>Document decisions</h3><p>Code says what. Commits and design notes say why.</p></li>
+</ol>
+
+<h2 style="font-size:1.3rem;margin-top:2.5em">The direction</h2>
+<p>I'm pursuing internships, entry-level roles, and freelance work in backend or full-stack development — particularly in security-adjacent engineering, offline-first design, and digital trust infrastructure for Kenya and the wider African market.</p>
+
+<p style="margin-top:3em">
+  <a class="btn p" href="/projects/">See projects</a>
+  <a class="btn" href="/contact/">Get in touch</a>
+</p>
+</div></section>
+{% endblock %}

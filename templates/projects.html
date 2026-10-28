@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block title %}Projects — Dericks Omondi{% endblock %}
+{% block nav_projects %}on{% endblock %}
+
+{% block content %}
+<section><div class="wrap" data-reveal>
+<div class="eyebrow">Work</div>
+<h1 style="font-size:clamp(2rem,5vw,3rem)">Projects</h1>
+<p style="color:var(--mut);max-width:62ch;margin-bottom:2em">Every project shows its honest status. Concepts are labelled as concepts. Deeper case studies are available.</p>
+
+<div class="tools">
+  <input id="q" type="search" placeholder="Search projects" aria-label="Search projects">
+  <select id="fs" aria-label="Filter by status"><option value="">All statuses</option></select>
+  <select id="ft" aria-label="Filter by technology"><option value="">All technologies</option></select>
+</div>
+
+<div id="projList" class="grid g2" aria-live="polite"></div>
+</div></section>
+
+{% include "partials/project_modal.html" %}
+
+<!-- Securely pass GitHub data to JS -->
+{{ github_projects|json_script:"github-data" }}
+
+<script>
+  {% include "partials/projects_data.html" %}
+
+  // Parse the GitHub data
+  var ghData = JSON.parse(document.getElementById('github-data').textContent);
+
+  // Merge GitHub data into PROJECTS safely
+  for (var i = 0; i < PROJECTS.length; i++) {
+    var p = PROJECTS[i];
+    var ghRepo = null;
+    
+    for (var j = 0; j < ghData.length; j++) {
+      var repo = ghData[j];
+      var repoName = repo.name.toLowerCase();
+      var slug = (p.slug || p.id).toLowerCase();
+      
+      // Check if slug is in repo name OR repo name is in the project link
+      if (repoName.indexOf(slug) !== -1 || (p.link && p.link.toLowerCase().indexOf(repoName) !== -1)) {
+        ghRepo = repo;
+        break;
+      }
+    }
+
+    if (ghRepo) {
+      p.p = ghRepo.description || p.p;
+      p.link = ghRepo.url;
+      p.lastUpdated = new Date(ghRepo.updated_at).toLocaleDateString();
+      p.isSynced = true;
+      
+      if (ghRepo.language) {
+        // Add the language to the top of the tech stack if it's not there
+        if (p.tech.indexOf(ghRepo.language) === -1) {
+          p.tech.unshift(ghRepo.language);
+        }
+      }
+    }
+  }
+</script>
+
+<script src="/static/js/projects-page.js"></script>
+<script src="/static/js/case-study.js"></script>
+{% endblock %}
+
+

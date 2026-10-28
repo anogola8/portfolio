@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>{% block title %}Dericks “Jappy” Omondi — The Digital Workshop{% endblock %}</title>
+<meta name="description" content="{% block description %}Dericks Omondi — IT student, full-stack developer, and builder of practical software for real needs.{% endblock %}">
+<link rel="stylesheet" href="/static/css/portfolio.css">
+<link rel="icon" href="/static/img/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/static/img/favicon.svg">
+{% block head_extra %}{% endblock %}
+<script>
+  // Apply stored theme before first paint to prevent flash
+  try {
+    var t = localStorage.getItem("theme");
+    if (t === "dark" || t === "light") {
+      document.documentElement.setAttribute("data-theme", t);
+    }
+  } catch (e) {}
+</script>
+</head>
+<body>
+<header class="nav"><div class="wrap">
+<a class="brand" href="/"><b>&gt;</b> jappy<b>_</b>workshop</a>
+<button class="btn" id="menuBtn" aria-expanded="false" aria-controls="menu">Menu</button>
+<nav id="menu" aria-label="Primary">
+  <ul>
+    <li><a href="/" class="{% block nav_home %}{% endblock %}">Home</a></li>
+    <li><a href="/projects/" class="{% block nav_projects %}{% endblock %}">Projects</a></li>
+    <li><a href="/skills/" class="{% block nav_skills %}{% endblock %}">Skills</a></li>
+    <li><a href="/experience/" class="{% block nav_experience %}{% endblock %}">Experience</a></li>
+    <li><a href="/notes/" class="{% block nav_notes %}{% endblock %}">Notes</a></li>
+    <li><a href="/about/" class="{% block nav_about %}{% endblock %}">About</a></li>
+    <li><a href="/cv/" class="{% block nav_cv %}{% endblock %}">CV</a></li>
+    <li><a href="/contact/" class="{% block nav_contact %}{% endblock %}">Contact</a></li>
+  </ul>
+</nav>
+<button class="btn" id="themeBtn" aria-label="Toggle light and dark theme">Theme</button>
+<button class="btn" id="cmdkBtn" aria-label="Open command palette (Ctrl+K)" title="Ctrl+K">⌘K</button>
+</div></header>
+
+<main id="top">
+{% block content %}{% endblock %}
+</main>
+
+<footer><div class="wrap">
+<span>© 2026 Dericks Omondi · </span>
+<a href="/">Home</a> · <a href="/about/">About</a> · <a href="/notes/">Notes</a> · <a href="/now/">Now</a> · <a href="/cv/">CV</a> · <a href="/contact/">Contact</a>
+</div></footer>
+
+<div id="cmdkMount"></div>
+
+<script>
+  // menu toggle
+  document.getElementById("menuBtn").addEventListener("click", function () {
+    var open = document.getElementById("menu").classList.toggle("open");
+    this.setAttribute("aria-expanded", String(open));
+  });
+  // theme toggle
+  document.getElementById("themeBtn").addEventListener("click", function () {
+    var d = document.documentElement;
+    var cur = d.getAttribute("data-theme") || (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+    var next = cur === "dark" ? "light" : "dark";
+    d.setAttribute("data-theme", next);
+    try { localStorage.setItem("theme", next); } catch (e) {}
+  });
+</script>
+<script src="/static/js/portfolio.js"></script>
+<script src="/static/js/palette.js"></script>
+{% block body_extra %}{% endblock %}
+</body>
+</html>
