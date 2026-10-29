@@ -30,6 +30,7 @@ INSTALLED_APPS = [
 ]
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -81,3 +82,7 @@ MEDIA_ROOT = BASE_DIR / "media"
 LOGIN_REDIRECT_URL = '/dashboard/'
 LOGIN_URL = '/manage-secret/'
 
+
+
+# WhiteNoise for serving static files on Render
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
