@@ -7,13 +7,21 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 env = lambda k, d="": os.environ.get(k, d)
 
 DEBUG = env("DJANGO_DEBUG", "0") == "1"
+# Safety: force DEBUG off on Render production
+if os.environ.get("RENDER") == "true":
+    DEBUG = False
 SECRET_KEY = env("DJANGO_SECRET_KEY")
 if not SECRET_KEY:
     if DEBUG:
         SECRET_KEY = "dev-only-insecure-key"
     else:
         raise RuntimeError("Set DJANGO_SECRET_KEY (see .env.example).")
-ALLOWED_HOSTS = [h for h in env("DJANGO_ALLOWED_HOSTS", "localhost,127.0.0.1").split(",") if h]
+ALLOWED_HOSTS = [h.strip() for h in env("DJANGO_ALLOWED_HOSTS", "localhost,127.0.0.1").split(",") if h.strip()]
+# Fallback: always allow the live Render deployment URL
+if "dericks-portfolio.onrender.com" not in ALLOWED_HOSTS:
+    ALLOWED_HOSTS.append("dericks-portfolio.onrender.com")
+if ".onrender.com" not in ALLOWED_HOSTS:
+    ALLOWED_HOSTS.append(".onrender.com")
 
 INSTALLED_APPS = [
     "django.contrib.admin", "django.contrib.auth", "django.contrib.contenttypes",
