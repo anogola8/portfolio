@@ -68,3 +68,43 @@ class AccessLog(models.Model):
 
     def __str__(self):
         return f"{self.project.slug} @ {self.at:%Y-%m-%d %H:%M}"
+from django.db import models
+
+class Ebook(models.Model):
+    title = models.CharField(max_length=200)
+    description = models.TextField(help_text="What is this ebook about?")
+    cover = models.ImageField(upload_to='ebooks/covers/', blank=True, null=True, help_text="Upload a 3:4 aspect ratio cover image.")
+    file = models.FileField(upload_to='ebooks/files/', blank=True, null=True, help_text="Upload the PDF or EPUB file.")
+    
+    is_free = models.BooleanField(default=False, help_text="Check this if anyone can download it without asking.")
+    is_ongoing = models.BooleanField(default=False, help_text="Check this if you are still writing chapters.")
+    series_name = models.CharField(max_length=200, blank=True, null=True, help_text="e.g. The Digital Trust Series")
+    chapter_number = models.PositiveIntegerField(default=1, help_text="If this is part of a series, what number is this chapter?")
+    
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ["-created"]
+
+    def __str__(self):
+        return self.title
+
+
+
+class StoryChapter(models.Model):
+    title = models.CharField(max_length=200)
+    series_name = models.CharField(max_length=200, help_text="e.g. The Digital Trust Series")
+    chapter_number = models.PositiveIntegerField(default=1)
+    
+    # The actual story text (Markdown or plain text)
+    content = models.TextField(help_text="Write your chapter here. Use blank lines for paragraphs.")
+    
+    is_published = models.BooleanField(default=False, help_text="Check this to make it visible on the site.")
+    published_date = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        ordering = ["series_name", "chapter_number"]
+
+    def __str__(self):
+        return f"{self.series_name} - Ch {self.chapter_number}: {self.title}"

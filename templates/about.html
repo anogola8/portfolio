@@ -3,35 +3,68 @@
 {% block nav_about %}on{% endblock %}
 
 {% block content %}
-<section><div class="wrap" style="max-width:760px" data-reveal>
+<section><div class="wrap" data-reveal>
 <div class="eyebrow">About</div>
 <h1 style="font-size:clamp(2rem,5vw,3rem)">How I work</h1>
 
-<p style="font-size:1.1rem;color:var(--mut);max-width:62ch">
-I'm drawn to problems where software has to be trustworthy: records that can't quietly change, access that's properly controlled, and systems that people can actually use.
-</p>
+<div style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 60px; margin-top: 48px; align-items: start;">
+  
+  <!-- LEFT COLUMN: The Massive Cinematic Photo -->
+  <div>
+    <!-- The glowing animated frame -->
+    <div class="portrait-frame" style="position: relative; padding: 12px; background: var(--panel); border-radius: var(--r-lg);">
+      <div class="portrait-aura"></div>
+      <img loading="lazy" src="/static/img/profile-main.jpg" alt="Dericks Omondi" class="portrait-img" style="width: 100%; min-height: 500px; max-height: 650px; border-radius: var(--r-md); object-fit: cover; object-position: top; position: relative; z-index: 2;">
+      
+      <!-- Floating name tag -->
+      <div style="position: absolute; bottom: 32px; left: 32px; right: 32px; background: rgba(11, 18, 32, 0.85); backdrop-filter: blur(8px); padding: 16px; border-radius: var(--r-md); border: 1px solid var(--line); z-index: 3; text-align: left;">
+        <h3 class="mono" style="margin: 0 0 4px 0; font-size: 1.1rem; color: var(--ink);">Dericks "Jappy" Omondi</h3>
+        <p style="font-size: 0.9rem; color: var(--acc); margin: 0;">Nairobi, Kenya · Open to remote</p>
+      </div>
+    </div>
 
-<h2 style="font-size:1.3rem;margin-top:2.5em">The path in</h2>
-<p>I'm a final-year Business Information Technology student at Meru University of Science and Technology, graduating 2027. My entry point was curiosity about how systems fail — not how they work when everything is fine, but what happens when the database loses a row, when a payment callback never arrives, when an officer's phone has been offline for three weeks and comes back with new records.</p>
+    <!-- Mini Gallery -->
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 16px;">
+      <div class="card" style="padding: 8px;">
+        <img loading="lazy" src="/static/img/profile-casual.jpg" alt="Dericks casual" style="width: 100%; border-radius: var(--r-sm); aspect-ratio: 1/1; object-fit: cover; object-position: top;">
+      </div>
+      <div class="card" style="padding: 8px;">
+        <img loading="lazy" src="/static/img/profile-smile.jpg" alt="Dericks smiling" style="width: 100%; border-radius: var(--r-sm); aspect-ratio: 1/1; object-fit: cover; object-position: top;">
+      </div>
+    </div>
+  </div>
 
-<h2 style="font-size:1.3rem;margin-top:2.5em">The problems that interest me</h2>
-<p>Trust boundaries. Offline-first records. Verifiable work history. Access that survives the second feature. These are the themes that run through my projects — not as theory, but as things I've had to code around.</p>
+  <!-- RIGHT COLUMN -->
+  <div>
+    <p style="font-size:1.2rem;color:var(--ink);max-width:62ch;font-weight: 500;line-height: 1.6;">
+      I'm drawn to problems where software has to be trustworthy: records that can't quietly change, access that's properly controlled, and systems that people can actually use.
+    </p>
 
-<h2 style="font-size:1.3rem;margin-top:2.5em">The method</h2>
-<ol class="process">
-  <li><span class="proc-n mono">01</span><h3>Understand the trust boundary</h3><p>Before code, I ask: who is trusted, who is not, what breaks if the boundary shifts.</p></li>
-  <li><span class="proc-n mono">02</span><h3>Schema before screens</h3><p>Data model first — the access model can't be retrofitted cleanly.</p></li>
-  <li><span class="proc-n mono">03</span><h3>Thin vertical slices</h3><p>One complete flow end-to-end before adding the second.</p></li>
-  <li><span class="proc-n mono">04</span><h3>Test the failure modes</h3><p>Bad input fails cleanly. Rate limits, missing MFA, expired tokens.</p></li>
-  <li><span class="proc-n mono">05</span><h3>Document decisions</h3><p>Code says what. Commits and design notes say why.</p></li>
-</ol>
+    <h2 style="font-size:1.3rem;margin-top:2em">The path in</h2>
+    <p>I'm a final-year Business Information Technology student at Meru University of Science and Technology, graduating 2027. My entry point was curiosity about how systems fail — not how they work when everything is fine, but what happens when the database loses a row, when a payment callback never arrives, when an officer's phone has been offline for three weeks and comes back with new records.</p>
 
-<h2 style="font-size:1.3rem;margin-top:2.5em">The direction</h2>
-<p>I'm pursuing internships, entry-level roles, and freelance work in backend or full-stack development — particularly in security-adjacent engineering, offline-first design, and digital trust infrastructure for Kenya and the wider African market.</p>
+    <h2 style="font-size:1.3rem;margin-top:2em">The problems that interest me</h2>
+    <p>Trust boundaries. Offline-first records. Verifiable work history. Access that survives the second feature. These are the themes that run through my projects — not as theory, but as things I've had to code around.</p>
 
-<p style="margin-top:3em">
-  <a class="btn p" href="/projects/">See projects</a>
-  <a class="btn" href="/contact/">Get in touch</a>
-</p>
+    <h2 style="font-size:1.3rem;margin-top:2em">The method</h2>
+    <ol class="process" style="grid-template-columns: 1fr; margin-top: 16px;">
+      <li><span class="proc-n mono">01</span><h3>Understand the trust boundary</h3><p>Before code, I ask: who is trusted, who is not, what breaks if the boundary shifts.</p></li>
+      <li><span class="proc-n mono">02</span><h3>Schema before screens</h3><p>Data model first — the access model can't be retrofitted cleanly.</p></li>
+      <li><span class="proc-n mono">03</span><h3>Thin vertical slices</h3><p>One complete flow end-to-end before adding the second.</p></li>
+      <li><span class="proc-n mono">04</span><h3>Test the failure modes</h3><p>Bad input fails cleanly. Rate limits, missing MFA, expired tokens.</p></li>
+      <li><span class="proc-n mono">05</span><h3>Document decisions</h3><p>Code says what. Commits and design notes say why.</p></li>
+    </ol>
+
+    <h2 style="font-size:1.3rem;margin-top:2em">The direction</h2>
+    <p>I'm pursuing internships, entry-level roles, and freelance work in backend or full-stack development — particularly in security-adjacent engineering, offline-first design, and digital trust infrastructure for Kenya and the wider African market.</p>
+
+    <p style="margin-top:2em">
+      <a class="btn p" href="/projects/">See my work</a>
+      <a class="btn" href="/contact/">Get in touch</a>
+    </p>
+  </div>
+</div>
+
 </div></section>
 {% endblock %}
+

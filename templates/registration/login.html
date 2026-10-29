@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Login — Dericks Omondi{% endblock %}
+
+{% block content %}
+<section><div class="wrap" style="max-width:400px; margin-top: 80px;" data-reveal>
+<div class="eyebrow">Control Center</div>
+<h1 style="font-size:2rem; margin-bottom: 24px;">Admin Login</h1>
+
+<div class="card" style="padding: 32px;">
+  {% if form.errors %}
+    <p style="color: var(--warn); margin-bottom: 16px;">Your username and password didn't match. Please try again.</p>
+  {% endif %}
+
+  <form method="post" action="{% url 'login' %}">
+    {% csrf_token %}
+    
+    <label for="id_username">Username</label>
+    <input type="text" name="username" id="id_username" autofocus required>
+
+    <label for="id_password">Password</label>
+    <input type="password" name="password" id="id_password" required>
+
+    <input type="hidden" name="next" value="{{ next }}">
+    
+    <button type="submit" class="btn p" style="width: 100%; justify-content: center; margin-top: 24px;">Log In</button>
+  </form>
+</div>
+</div></section>
+{% endblock %}

@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% block title %}Admin Dashboard — Dericks Omondi{% endblock %}
+
+{% block content %}
+<section><div class="wrap" data-reveal>
+<div class="eyebrow">Control Center</div>
+<h1 style="font-size:clamp(2rem,5vw,3rem)">Dashboard</h1>
+<p style="color:var(--mut);margin-bottom:2em">Manage your content, ebooks, and gated projects from one place.</p>
+
+<!-- STATS GRID -->
+<div class="grid g3" style="margin-bottom: 32px;">
+  <div class="card" style="border-left: 4px solid var(--acc);">
+    <div class="mono" style="font-size:0.75rem; color:var(--mut); text-transform:uppercase;">Total Ebooks</div>
+    <div style="font-size: 2rem; font-weight: 700; margin-top: 8px;">{{ stats.ebooks }}</div>
+    <a href="/dashboard/add-ebook/" class="btn p" style="margin-top: 16px; width: 100%; justify-content: center;">+ Add New Ebook</a>
+  </div>
+  
+  <div class="card" style="border-left: 4px solid var(--warn);">
+    <div class="mono" style="font-size:0.75rem; color:var(--mut); text-transform:uppercase;">Gated Projects</div>
+    <div style="font-size: 2rem; font-weight: 700; margin-top: 8px;">{{ stats.gated_projects }}</div>
+    <a href="/dashboard/add-gated/" class="btn" style="margin-top: 16px; width: 100%; justify-content: center;">+ Add Gated Project</a>
+  </div>
+  
+  <div class="card" style="border-left: 4px solid var(--ok);">
+    <div class="mono" style="font-size:0.75rem; color:var(--mut); text-transform:uppercase;">Total Users</div>
+    <div style="font-size: 2rem; font-weight: 700; margin-top: 8px;">{{ stats.users }}</div>
+    <div style="margin-top: 16px; font-size: 0.85rem; color: var(--mut);">Registered Admins</div>
+  </div>
+</div>
+
+<!-- RECENT ACTIVITY & USERS -->
+<div class="grid g2" style="margin-bottom: 32px;">
+  <div class="card">
+    <h3 style="margin-top:0">Recent Ebooks</h3>
+    <ul style="list-style: none; padding: 0; margin: 0;">
+      {% for book in recent_ebooks %}
+        <li style="padding: 10px 0; border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; align-items: center;">
+          <span>{{ book.title }}</span>
+          <a href="/dashboard/edit-ebook/{{ book.id }}/" class="tag" style="text-decoration: none;">Edit</a>
+        </li>
+      {% empty %}
+        <li style="color: var(--mut); padding: 10px 0;">No ebooks yet.</li>
+      {% endfor %}
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3 style="margin-top:0">Recent Gated Projects</h3>
+    <ul style="list-style: none; padding: 0; margin: 0;">
+      {% for proj in recent_gated %}
+        <li style="padding: 10px 0; border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; align-items: center;">
+          <span>{{ proj.title }}</span>
+          <a href="/manage-site/access/projectgated/{{ proj.id }}/change/" class="tag" style="text-decoration: none;">Edit</a>
+        </li>
+      {% empty %}
+        <li style="color: var(--mut); padding: 10px 0;">No gated projects yet.</li>
+      {% endfor %}
+    </ul>
+  </div>
+</div>
+
+<div class="card">
+  <h3 style="margin-top:0">Active Users</h3>
+  <ul style="list-style: none; padding: 0; margin: 0;">
+    {% for u in users %}
+      <li style="padding: 10px 0; border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; align-items: center;">
+        <span><strong>{{ u.username }}</strong> {% if u.is_superuser %}<span class="tag" style="border-color:var(--acc);color:var(--acc);margin-left:8px">Admin</span>{% endif %}</span>
+        <span style="font-size: 0.8rem; color: var(--mut);">Joined {{ u.date_joined|date:"M Y" }}</span>
+      </li>
+    {% endfor %}
+  </ul>
+</div>
+
+<!-- QUICK LINKS -->
+<div class="card" style="margin-top: 32px; background: var(--acc-soft); border-color: var(--acc);">
+  <h3 style="margin-top:0; color: var(--acc);">Admin Tools</h3>
+  <p style="font-size:0.85rem;color:var(--mut);margin-top:0;">Use these links for advanced operations (editing users, deep database access).</p>
+  <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+    <a href="/manage-site/auth/user/add/" class="btn">Create New User</a>
+    <a href="/manage-site/" class="btn">Advanced Django Admin</a>
+    <a href="/" class="btn">View Live Site</a>
+  </div>
+</div>
+
+</div></section>
+{% endblock %}
+
+
+
+

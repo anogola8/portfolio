@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}Stories — Dericks Omondi{% endblock %}
+{% block nav_stories %}on{% endblock %}
+
+{% block content %}
+<section><div class="wrap" data-reveal>
+<div class="eyebrow">Serialized</div>
+<h1 style="font-size:clamp(2rem,5vw,3rem)">Stories</h1>
+<p style="color:var(--mut);max-width:62ch;margin-bottom:2em">Ongoing stories, tech thrillers, and experimental writing. Updated chapter by chapter.</p>
+
+{% if series %}
+  {% for series_name, chapters in series.items %}
+    <h2 style="font-size:1.3rem; margin-top: 40px; border-bottom: 1px solid var(--line); padding-bottom: 8px;">{{ series_name }}</h2>
+    <div class="grid g3" style="margin-top: 16px;">
+      {% for chapter in chapters %}
+        <div class="card" style="padding: 20px; display: flex; flex-direction: column;">
+          <span class="mono" style="font-size: 0.7rem; color: var(--acc); margin-bottom: 8px;">CHAPTER {{ chapter.chapter_number }}</span>
+          <h3 style="font-size: 1.05rem; margin: 0 0 8px 0;">{{ chapter.title }}</h3>
+          <p style="font-size: 0.85rem; color: var(--mut); flex-grow: 1;">{{ chapter.content|truncatewords:15 }}</p>
+          <a href="/stories/{{ chapter.id }}/" class="btn p" style="margin-top: 16px; justify-content: center;">Read Chapter</a>
+        </div>
+      {% endfor %}
+    </div>
+  {% endfor %}
+{% else %}
+  <div class="card" style="text-align: center; padding: 64px 20px;">
+    <p class="mono" style="color: var(--mut);">No stories published yet. Check back soon.</p>
+  </div>
+{% endif %}
+
+</div></section>
+{% endblock %}

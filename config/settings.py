@@ -36,7 +36,8 @@ TEMPLATES = [{"BACKEND": "django.template.backends.django.DjangoTemplates", "DIR
               "APP_DIRS": True, "OPTIONS": {"context_processors": [
                   "django.template.context_processors.request",
                   "django.contrib.auth.context_processors.auth",
-                  "django.contrib.messages.context_processors.messages"]}}]
+                  "django.contrib.messages.context_processors.messages",
+                  "access.context_processors.search_data"]}}]
 DATABASES = {"default": {"ENGINE": "django.db.backends.sqlite3", "NAME": BASE_DIR / "db.sqlite3"}}
 CACHES = {"default": {"BACKEND": "django.core.cache.backends.locmem.LocMemCache"}}
 AUTH_PASSWORD_VALIDATORS = [{"NAME": f"django.contrib.auth.password_validation.{n}"} for n in
@@ -67,4 +68,8 @@ MEDIA_ROOT = BASE_DIR / "media"
 
 
 
+
+
+LOGIN_REDIRECT_URL = '/dashboard/'
+LOGIN_URL = '/manage-secret/'
 

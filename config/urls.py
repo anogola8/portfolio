@@ -6,6 +6,7 @@ from django.urls import include, path
 
 from config.sitemaps import sitemaps
 from contact import views
+from django.contrib.auth import views as auth_views
 
 urlpatterns = [
     path(settings.ADMIN_PATH, admin.site.urls),
@@ -24,6 +25,14 @@ urlpatterns = [
     path("cv/", views.cv, name="cv"),
     path("notes/", views.notes, name="notes"),
     path("notes/<slug:slug>/", views.note, name="note"),
+    path("library/", views.library, name="library"),
+    path("read/<int:pk>/", views.read_ebook, name="read_ebook"),
+    path("dashboard/", views.dashboard, name="dashboard"),
+    path("dashboard/add-ebook/", views.dashboard_add_ebook, name="dashboard_add_ebook"),
+    path("dashboard/add-gated/", views.dashboard_add_gated, name="dashboard_add_gated"),
+    path("dashboard/edit-ebook/<int:pk>/", views.dashboard_edit_ebook, name="dashboard_edit_ebook"),
+    path("manage-secret/", auth_views.LoginView.as_view(template_name="registration/login.html"), name="login"),
+    path("logout/", auth_views.LogoutView.as_view(next_page="/"), name="logout"),
     path("contact/", views.contact_page, name="contact"),
     path("now/", views.now, name="now"),
 
@@ -34,3 +43,5 @@ urlpatterns = [
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+

@@ -33,7 +33,7 @@ def get_github_projects(username="anogola8"):
                     "updated_at": r["updated_at"],
                     "topics": r.get("topics", [])
                 })
-            cache.set(cache_key, projects, timeout=3600 * 12)
+            cache.set(cache_key, projects, timeout=86400)
             return projects
         else:
             print(f"GitHub API error: {response.status_code} - {response.text}")
@@ -42,3 +42,4 @@ def get_github_projects(username="anogola8"):
         print(f"GitHub fetch failed: {e}")
     
     return []
+

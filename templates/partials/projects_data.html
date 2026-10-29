@@ -1,5 +1,5 @@
 var PROJECTS = [
-  {id:"edms",  slug:"edms", t:"KDF Enterprise Document Management System", s:"In development",
+  {id:"edms",  slug:"edms", t:"Enterprise Document Management System", s:"In development",
    p:"Large organisations need controlled, auditable document handling with strict access rules.",
    u:"Staff of a large institution (system design project).",
    c:"Systems analysis, 63-table normalised schema with MySQL DDL, architecture document, and a 52-screen prototype converted into a Django app.",
@@ -94,7 +94,33 @@ var PROJECTS = [
    f:["User management","Event tracking"],
    sec:"Details to be added.",
    status:"In development.",
-   future:"Migrate existing data."}
+   future:"Migrate existing data."},
+  {id:"safepay", slug:"safepay", t:"SafePay Gateway", s:"In development",
+   p:"A secure payment gateway processing high-volume financial transactions.",
+   u:"Merchants and customers.",
+   c:"Architecting the secure backend, encryption protocols, and API integrations.",
+   tech:["Python","Django","PostgreSQL","Redis"],
+   f:["Secure API endpoints","PCI-DSS compliance (planned)","Real-time fraud detection (planned)"],
+   sec:"Strong focus on API security, rate limiting, and encryption at rest.",
+   status:"Private repository. Core backend in active development.",
+   future:"Integration with M-Pesa and Stripe.",
+   approach:"Designing for high concurrency and zero-trust architecture.",
+   hardPart:"Balancing security with fast transaction processing times.",
+   result:"Core transaction engine complete.",
+   lessons:"Secure systems require a completely different testing mindset.",
+   decisions:["Redis for rate limiting — fast and reliable","Python over Node.js — better for cryptographic libraries"],
+   gated:true, gatedSlug:"safepay-private", gatedSummary:"Private repository. Deeper architecture available on request."},
+
+  {id:"portfolio", slug:"portfolio", t:"The Digital Workshop (This Site)", s:"Completed",
+   p:"A custom developer portfolio showcasing secure backend work and interactive frontend UI.",
+   u:"Recruiters, hiring managers, and collaborators.",
+   c:"Built the entire Django backend, custom CSS design system, and interactive Canvas UI.",
+   tech:["Python","Django","JavaScript","HTML/CSS"],
+   f:["Custom admin dashboard","GitHub API integration","Token-gated private projects","Bokeh particle background"],
+   sec:"CSP headers, CSRF, rate-limited contact form, environment-driven secrets.",
+   status:"Live and actively maintained.",
+   future:"Continuous UI improvements and new technical notes.",
+   link:"https://github.com/anogola8/portfolio"}
 ];
 
 var SKILLS = [
@@ -129,7 +155,7 @@ var NOTES = [
   {id:"rbac-edms", title:"Designing role-based access for a document system", date:"2026",
    summary:"Role-based access sounds simple until you have 63 tables and need MFA. What I'd keep, and what I'd change.",
    body:[
-     "KDF EDMS needed RBAC from the first commit, not later. That meant the user model had to be designed around roles, not added to afterwards. Django's swap-user recommendation saved me a week of migration cascades.",
+     "EDMS needed RBAC from the first commit, not later. That meant the user model had to be designed around roles, not added to afterwards. Django's swap-user recommendation saved me a week of migration cascades.",
      "I modelled roles as data, not code. A Role row has a name and permissions. A User belongs to a Role. Permissions are checked by middleware, not scattered through views. Adding a new role is an admin action, not a deployment.",
      "MFA was the part that almost broke the design. Django doesn't ship a second-factor framework, so I used TOTP with a custom verification view. Design the auth flow as its own subsystem."
    ]},
@@ -162,6 +188,8 @@ var NOTES = [
      "Result: A cinematic, 3D-looking environment that runs at 60fps on mobile and respects prefers-reduced-motion for accessibility."
    ]}
 ];
+
+
 
 
 

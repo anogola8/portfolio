@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block title %}Add Gated Project — Dashboard{% endblock %}
+
+{% block content %}
+<section><div class="wrap" style="max-width:640px; margin-top: 40px;" data-reveal>
+  
+  <div style="margin-bottom: 24px;">
+    <a href="/dashboard/" class="mono" style="font-size: 0.85rem; color: var(--mut); text-decoration: none;">← Back to Dashboard</a>
+  </div>
+
+  <div class="eyebrow">Control Center</div>
+  <h1 style="font-size: 2rem; margin-bottom: 24px;">Add Gated Project</h1>
+
+  {% if messages %}
+    {% for message in messages %}
+      <div class="card" style="border-color: {% if message.tags == 'success' %}var(--ok){% else %}var(--warn){% endif %}; padding: 16px; margin-bottom: 24px;">
+        <p style="margin: 0; color: {% if message.tags == 'success' %}var(--ok){% else %}var(--warn){% endif %};">{{ message }}</p>
+      </div>
+    {% endfor %}
+  {% endif %}
+
+  <div class="card" style="padding: 32px;">
+    <form method="post">
+      {% csrf_token %}
+      
+      <label for="title">Project Title</label>
+      <input type="text" name="title" id="title" required placeholder="e.g. Enterprise Document Management System (Deep Dive)" onkeyup="generateSlug()">
+
+      <label for="slug">URL Slug</label>
+      <input type="text" name="slug" id="slug" required placeholder="edms-private" style="font-family: var(--mono); font-size: 0.9rem;">
+      <p class="note" style="margin-top: 4px;">Must be unique. Auto-generated from the title, but you can edit it.</p>
+
+      <label for="public_summary">Public Summary</label>
+      <input type="text" name="public_summary" id="public_summary" placeholder="Ongoing — deeper case study available on request.">
+      <p class="note" style="margin-top: 4px;">This is what the public sees on the project card.</p>
+
+      <label for="narrative">Gated Narrative (The Deep Dive)</label>
+      <textarea name="narrative" id="narrative" rows="6" placeholder="The architecture, the approach, the hard parts..."></textarea>
+      <p class="note" style="margin-top: 4px;">Only visible to people with the secret token link.</p>
+
+      <label for="decisions">Design Decisions (One per line)</label>
+      <textarea name="decisions" id="decisions" rows="4" placeholder="Schema-first over feature-first&#10;Custom user model from day one&#10;TOTP over SMS"></textarea>
+
+      <button type="submit" class="btn p" style="width: 100%; justify-content: center; padding: 16px; font-size: 1rem; margin-top: 24px;">Generate Gated Link</button>
+    </form>
+  </div>
+
+</div></section>
+
+<script>
+  function generateSlug() {
+    var title = document.getElementById("title").value;
+    var slug = title.toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-') // replace spaces and special chars with hyphens
+      .replace(/^-+|-+$/g, '');    // trim hyphens from ends
+    document.getElementById("slug").value = slug;
+  }
+</script>
+{% endblock %}

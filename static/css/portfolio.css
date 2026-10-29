@@ -1,3 +1,4 @@
+/* Performance Optimized: Removed GPU-heavy blur filters to maintain 60fps. */
 /* ============================================================
    THE DIGITAL WORKSHOP — design system
    ============================================================ */
@@ -522,7 +523,7 @@ body::before {
   height: 100vh;
   z-index: -2;
   pointer-events: none;
-  filter: blur(60px) saturate(1.5); /* Massive blur for depth of field */
+  /* Removed heavy blur for performance */ /* Massive blur for depth of field */
   opacity: 0.6;
 }
 
@@ -613,7 +614,7 @@ body {
   z-index: -2;
   pointer-events: none;
   /* This creates the camera lens effect and chromatic fringe */
-  filter: blur(2px) contrast(1.1) saturate(1.2);
+  /* Removed blur for performance */
   opacity: 0.9;
 }
 
@@ -714,4 +715,246 @@ section > .wrap {
 }
 
 
+
+
+/* About page mobile fix */
+@media (max-width: 860px) {
+  /* Find the about page custom grid and stack it */
+  div[style*="grid-template-columns: minmax(300px, 1fr) 2fr;"] {
+    grid-template-columns: 1fr !important;
+  }
+  /* Remove the sticky positioning on mobile */
+  div[style*="position: sticky; top: 100px;"] {
+    position: relative !important;
+    top: 0 !important;
+  }
+}
+
+/* =========================================================
+   CINEMATIC PORTRAIT ANIMATIONS
+   ========================================================= */
+.portrait-frame {
+  transition: transform var(--t-med) var(--ease);
+  box-shadow: 0 20px 50px -20px rgba(0,0,0,0.8);
+  overflow: hidden;
+}
+
+.portrait-frame:hover {
+  transform: translateY(-5px);
+}
+
+.portrait-img {
+  transition: transform var(--t-slow) var(--ease), filter var(--t-slow) var(--ease);
+}
+
+.portrait-frame:hover .portrait-img {
+  transform: scale(1.03);
+  filter: contrast(1.1) saturate(1.1);
+}
+
+/* The pulsing aura behind the image */
+.portrait-aura {
+  position: absolute;
+  inset: -4px;
+  border-radius: var(--r-lg);
+  background: conic-gradient(from 0deg, transparent, var(--acc), transparent, var(--acc), transparent);
+  filter: blur(12px);
+  opacity: 0.5;
+  z-index: 1;
+  animation: spin 8s linear infinite;
+}
+
+@keyframes spin {
+  100% { transform: rotate(360deg); }
+}
+
+/* Ensure image is above the aura */
+.portrait-frame img {
+  z-index: 2;
+}
+
+/* Mobile fallback for about page grid */
+@media (max-width: 900px) {
+  section > .wrap > div[style*="grid-template-columns: 1.2fr 1fr;"] {
+    grid-template-columns: 1fr !important;
+    gap: 32px !important;
+  }
+  .portrait-img {
+    min-height: 400px !important;
+  }
+}
+
+/* Homepage avatar animation */
+.hero-profile-pic {
+  animation: pulse-glow 3s ease-in-out infinite;
+  transition: transform 0.3s ease;
+}
+
+.hero-profile-pic:hover {
+  transform: scale(1.1);
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 20px rgba(63,224,240,0.3); }
+  50% { box-shadow: 0 0 40px rgba(63,224,240,0.8); }
+}
+
+/* =========================================================
+   PRINT STYLES (For CV Page)
+   ========================================================= */
+@media print {
+  /* Hide everything that isn't the CV */
+  body::before, #bgCanvas, .nav, footer, #fab-container, .eyebrow, .btn, .noprint {
+    display: none !important;
+  }
+
+  /* Reset the page to white paper */
+  body {
+    background: #fff !important;
+    color: #000 !important;
+    font-size: 11pt !important;
+    line-height: 1.4 !important;
+  }
+
+  /* Reset the cards to plain text */
+  .card, section > .wrap:not(.hero) {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  /* Format the CV sections */
+  #cv {
+    padding: 0 !important;
+  }
+  
+  #cv h1 {
+    font-size: 24pt !important;
+    margin-bottom: 8px !important;
+    color: #000 !important;
+  }
+  
+  #cv h2 {
+    font-size: 14pt !important;
+    margin-top: 20px !important;
+    margin-bottom: 8px !important;
+    border-bottom: 1px solid #000 !important;
+    padding-bottom: 4px !important;
+    color: #000 !important;
+    font-family: Georgia, serif !important;
+  }
+
+  #cv h3 {
+    font-size: 12pt !important;
+    margin-bottom: 4px !important;
+  }
+
+  #cv ul {
+    margin-top: 4px !important;
+    padding-left: 20px !important;
+  }
+
+  #cv li {
+    margin-bottom: 4px !important;
+    color: #000 !important;
+  }
+
+  /* Make links black and readable */
+  a {
+    color: #000 !important;
+    text-decoration: none !important;
+  }
+
+  /* Force everything into a single column */
+  #cv .grid, #cv .wrap {
+    display: block !important;
+    max-width: 100% !important;
+  }
+}
+
+/* =========================================================
+   PRINT STYLES (For CV Page - A4 Format)
+   ========================================================= */
+@media print {
+  @page {
+    size: A4;
+    margin: 15mm;
+  }
+
+  /* Hide non-essential UI */
+  body::before, #bgCanvas, .nav, footer, #fab-container, .eyebrow, .btn, .noprint {
+    display: none !important;
+  }
+
+  /* Reset to white paper */
+  body {
+    background: #fff !important;
+    color: #000 !important;
+    font-size: 11pt !important;
+    line-height: 1.5 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* Strip cards and backgrounds */
+  .card, section > .wrap:not(.hero) {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    page-break-inside: avoid;
+  }
+
+  /* Format typography */
+  #cv h1 {
+    font-size: 24pt !important;
+    margin-bottom: 4px !important;
+    color: #000 !important;
+    font-family: Georgia, serif !important;
+    letter-spacing: -0.02em;
+  }
+  
+  #cv h2 {
+    font-size: 13pt !important;
+    margin-top: 16px !important;
+    margin-bottom: 8px !important;
+    border-bottom: 1.5px solid #000 !important;
+    padding-bottom: 2px !important;
+    color: #000 !important;
+    font-family: Georgia, serif !important;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  #cv h3 {
+    font-size: 11pt !important;
+    margin-bottom: 2px !important;
+  }
+
+  #cv ul {
+    margin-top: 2px !important;
+    padding-left: 16px !important;
+  }
+
+  #cv li {
+    margin-bottom: 2px !important;
+    color: #000 !important;
+    page-break-inside: avoid;
+  }
+
+  /* Links should be black */
+  a {
+    color: #000 !important;
+    text-decoration: none !important;
+  }
+
+  /* Force single column */
+  #cv .grid, #cv .wrap {
+    display: block !important;
+    max-width: 100% !important;
+  }
+}
 

@@ -5,9 +5,10 @@
 {% block content %}
 <div class="wrap hero">
 
+<img loading="lazy" src="/static/img/profile-main.jpg" alt="Dericks Omondi" class="hero-profile-pic" style="width: 200px; height: 200px; border-radius: 50%; object-fit: cover; object-position: top; border: 3px solid var(--acc); margin-bottom: 32px; box-shadow: 0 0 20px rgba(63,224,240,0.3);">
 <div class="eyebrow">The Digital Workshop</div>
 <h1>Building practical technology for real-world problems.</h1>
-<p class="lead">I’m Dericks “Jappy” Omondi, a Business Information Technology student in Kenya. I build full-stack systems, explore secure digital design, and turn real needs into working software.</p>
+<p class="lead">I’m Dericks Omondi, a Business Information Technology student in Kenya. I build full-stack systems, explore secure digital design, and turn real needs into working software.</p>
 <div class="cta">
 <a class="btn p" href="/projects/">Explore my work</a>
 <a class="btn" href="/cv/">View CV</a>
@@ -17,7 +18,7 @@
 <dl class="grid g3" style="margin:12px 0 0">
 <div><dt>Who</dt><dd>3rd-year BSc BIT, Meru University of Science and Technology (graduating 2027)</dd></div>
 <div><dt>What I build</dt><dd>Django, Node/Express and SvelteKit web apps with databases, auth and API integrations</dd></div>
-<div><dt>Built so far</dt><dd>UFA Kenya website (deployed), Study Pro (academic app), KDF EDMS (in development)</dd></div>
+<div><dt>Built so far</dt><dd>UFA Kenya website (deployed), Study Pro (academic app), EDMS (in development)</dd></div>
 <div><dt>Seeking</dt><dd id="seekSummary"></dd></div>
 <div><dt>Location</dt><dd>Kenya</dd></div>
 <div><dt>Contact</dt><dd><a href="/contact/">Form</a> · <a href="https://github.com/anogola8" rel="noopener">GitHub</a></dd></div>
@@ -75,6 +76,62 @@
 <button class="btn" id="chainReset">Reset demo data</button>
 </div></section>
 
+<section id="headers"><div class="wrap" data-reveal>
+<div class="eyebrow">Lab · Live</div>
+<h2>Security Headers Inspector</h2>
+<p style="color:var(--mut); max-width: 62ch;">Most portfolios just claim they are secure. This live tool makes a request to this exact page and reads the real HTTP security headers set by the Django middleware and reverse proxy.</p>
+
+<div class="card" style="font-family: var(--mono); font-size: 0.85rem; background: var(--bg-2);">
+  <div id="headerOutput" style="min-height: 150px; color: var(--acc);">
+    > Initializing secure connection...<br>
+    > Scanning headers...
+  </div>
+  <button class="btn" id="scanBtn" style="margin-top: 16px;">Re-scan Headers</button>
+</div>
+</div></section>
+
+<script>
+  async function scanHeaders() {
+    var out = document.getElementById("headerOutput");
+    out.innerHTML = "> Scanning... please wait.";
+    try {
+      var response = await fetch(window.location.href, { method: "GET" });
+      
+      var headersOfInterest = [
+        "content-security-policy",
+        "x-content-type-options",
+        "x-frame-options",
+        "referrer-policy",
+        "permissions-policy",
+        "strict-transport-security"
+      ];
+      
+      var html = "";
+      var foundCount = 0;
+      
+      headersOfInterest.forEach(function(h) {
+        var val = response.headers.get(h);
+        if (val) {
+          foundCount++;
+          // Truncate long CSP strings for readability
+          if (val.length > 80) val = val.substring(0, 80) + "... (truncated)";
+          html += "<div style='margin-bottom: 8px;'><span style='color: var(--ok);'>✓ " + h + "</span><br><span style='color: var(--ink); font-size: 0.8rem;'>" + val + "</span></div>";
+        } else {
+          html += "<div style='margin-bottom: 8px;'><span style='color: var(--warn);'>✗ " + h + "</span><br><span style='color: var(--mut); font-size: 0.8rem;'>Not set (or hidden by proxy)</span></div>";
+        }
+      });
+      
+      out.innerHTML = "<div style='margin-bottom: 12px; color: var(--acc);'>Scan complete. Found " + foundCount + " security headers.</div>" + html;
+    } catch (e) {
+      out.innerHTML = "<span style='color: var(--warn);'>Scan failed: " + e.message + "</span>";
+    }
+  }
+  
+  // Run once on load, or when button is clicked
+  document.getElementById("scanBtn").addEventListener("click", scanHeaders);
+  // Slight delay to allow page to finish loading
+  setTimeout(scanHeaders, 1000);
+</script>
 <section id="opps"><div class="wrap">
 <div class="eyebrow">Availability</div><h2>Open to</h2>
 <div id="oppList" class="card"></div>
@@ -203,7 +260,7 @@ Click any component to see why it exists, the decisions behind it, and how it fa
   <div class="marquee-content">
     <span>UFA KENYA</span>
     <span>·</span>
-    <span>KDF EDMS</span>
+    <span>EDMS</span>
     <span>·</span>
     <span>MERU UNIVERSITY</span>
     <span>·</span>
@@ -217,7 +274,7 @@ Click any component to see why it exists, the decisions behind it, and how it fa
     <!-- Duplicate for infinite scroll -->
     <span>UFA KENYA</span>
     <span>·</span>
-    <span>KDF EDMS</span>
+    <span>EDMS</span>
     <span>·</span>
     <span>MERU UNIVERSITY</span>
     <span>·</span>
@@ -229,3 +286,10 @@ Click any component to see why it exists, the decisions behind it, and how it fa
     <span>·</span>
   </div>
 </div>
+
+
+
+
+
+
+

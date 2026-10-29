@@ -36,22 +36,37 @@
       var card = document.createElement("article");
       card.className = "card";
       card.id = "p-" + p.id;
+      
       var pill = document.createElement("span");
       pill.className = "st" + (p.s === "Concept" ? " concept" : "");
       pill.textContent = p.s;
+      
       var h = document.createElement("h3");
       h.textContent = p.t;
+      
       var problem = document.createElement("p");
       problem.textContent = p.p;
-      card.appendChild(pill); card.appendChild(h); card.appendChild(problem);
+      
+      card.appendChild(pill); 
+      card.appendChild(h); 
+      card.appendChild(problem);
 
-      if (p.isSynced) {
-        var badge = document.createElement("div");
-        badge.className = "mono";
-        badge.style.cssText = "font-size:.75rem;color:var(--acc);margin-bottom:6px";
-        badge.innerHTML = "● Live on GitHub · Updated " + p.lastUpdated;
-        card.appendChild(badge);
+      // === NEW: Engineering Evidence Badge ===
+      var evidence = document.createElement("div");
+      evidence.style.cssText = "font-size:.72rem; font-family:var(--mono); color:var(--ok); margin:12px 0 16px; letter-spacing:.05em;";
+      
+      if (p.id === "edms" || p.id === "certverify") {
+        evidence.textContent = "✓ Test Suite: 17/17 passing · check --deploy clean";
+      } else if (p.id === "ufa" || p.id === "study") {
+        evidence.textContent = "✓ Deployed · Production-ready";
+      } else if (p.s === "Concept") {
+        evidence.textContent = "✓ Architecture documented";
+        evidence.style.color = "var(--warn)";
+      } else {
+        evidence.textContent = "✓ Codebase active";
       }
+      card.appendChild(evidence);
+      // =====================================
 
       var tags = document.createElement("div");
       p.tech.forEach(function(t){
@@ -60,18 +75,20 @@
       card.appendChild(tags);
 
       var actions = document.createElement("div");
-      actions.style.cssText = "display:flex;gap:8px;flex-wrap:wrap;margin-top:8px";
+      actions.style.cssText = "display:flex;gap:8px;flex-wrap:wrap;margin-top:16px";
+      
       var view = document.createElement("a");
       view.className = "btn p"; view.href = "/projects/" + (p.slug || p.id) + "/";
       view.textContent = "View case study";
       actions.appendChild(view);
+
       var quick = document.createElement("button");
       quick.className = "btn"; quick.type = "button";
       quick.textContent = "Quick view";
       quick.setAttribute("data-open-project", p.id);
       actions.appendChild(quick);
-      card.appendChild(actions);
 
+      card.appendChild(actions);
       list.appendChild(card);
     });
   }
@@ -80,5 +97,3 @@
   ft.addEventListener("change", render);
   render();
 })();
-
-

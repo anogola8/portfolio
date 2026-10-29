@@ -123,7 +123,7 @@ _NOTES = {
         "date": "2026",
         "summary": "Role-based access sounds simple until you have 63 tables and need MFA. What I'd keep, and what I'd change.",
         "body": [
-            "KDF EDMS needed RBAC from the first commit, not later. That meant the user model had to be designed around roles, not added to afterwards. Django's swap-user recommendation saved me a week of migration cascades.",
+            "Enterprise Document Management System needed RBAC from the first commit, not later. That meant the user model had to be designed around roles, not added to afterwards. Django's swap-user recommendation saved me a week of migration cascades.",
             "I modelled roles as data, not code. A Role row has a name and permissions. A User belongs to a Role. Permissions are checked by middleware, not scattered through views. Adding a new role is an admin action, not a deployment.",
             "MFA was the part that almost broke the design. Django doesn't ship a second-factor framework, so I used TOTP with a custom verification view. Design the auth flow as its own subsystem."
         ],
@@ -183,4 +183,165 @@ def project_detail(request, slug):
 def robots_txt(request):
     from django.shortcuts import render
     return render(request, "robots.txt", content_type="text/plain")
+
+
+
+# ---- Ebook Library ----
+def library(request):
+    from django.shortcuts import render
+    from access.models import Ebook
+    ebooks = Ebook.objects.all()
+    return render(request, "library.html", {"ebooks": ebooks})
+
+# ---- Custom Admin Dashboard ----
+from django.contrib.admin.views.decorators import staff_member_required
+from django.shortcuts import render
+from access.models import Ebook, ProjectGated, AccessLog
+from django.contrib.auth.models import User
+
+@staff_member_required
+def dashboard(request):
+    # Get stats
+    stats = {
+        "ebooks": Ebook.objects.count(),
+        "gated_projects": ProjectGated.objects.count(),
+        "access_logs": AccessLog.objects.count(),
+        "users": User.objects.count(),
+    }
+    
+    # Get recent activity
+    recent_ebooks = Ebook.objects.all().order_by("-created")[:5]
+    recent_gated = ProjectGated.objects.all().order_by("-updated")[:5]
+    
+    return render(request, "dashboard.html", {
+        "stats": stats,
+        "recent_ebooks": recent_ebooks,
+        "recent_gated": recent_gated,
+    })
+
+# ---- Custom Add Ebook View ----
+from django.shortcuts import render, redirect
+from django.contrib.admin.views.decorators import staff_member_required
+from access.models import Ebook
+from django.contrib import messages
+
+@staff_member_required
+def dashboard_add_ebook(request):
+    if request.method == "POST":
+        title = request.POST.get("title")
+        description = request.POST.get("description")
+        is_free = request.POST.get("is_free") == "on"
+        is_ongoing = request.POST.get("is_ongoing") == "on"
+        series_name = request.POST.get("series_name")
+        chapter_number = request.POST.get("chapter_number", 1)
+        cover = request.FILES.get("cover")
+        file = request.FILES.get("file")
+
+        if title and description:
+            ebook = Ebook(
+                title=title,
+                description=description,
+                is_free=is_free,
+                is_ongoing=is_ongoing,
+                series_name=series_name,
+                chapter_number=chapter_number,
+                cover=cover,
+                file=file
+            )
+            ebook.save()
+            messages.success(request, f"Successfully added '{title}' to the library.")
+            return redirect("/dashboard/")
+        else:
+            messages.error(request, "Title and description are required.")
+
+    return render(request, "dashboard_add_ebook.html")
+
+
+# ---- Custom Add Gated Project View ----
+@staff_member_required
+def dashboard_add_gated(request):
+    if request.method == "POST":
+        title = request.POST.get("title")
+        slug = request.POST.get("slug")
+        public_summary = request.POST.get("public_summary")
+        narrative = request.POST.get("narrative")
+        decisions = request.POST.get("decisions")
+        
+        if title and slug:
+            # Create the object
+            project = ProjectGated(
+                title=title,
+                slug=slug,
+                public_summary=public_summary,
+                narrative=narrative,
+                decisions=decisions,
+                active=True
+            )
+            project.save()
+            messages.success(request, f"Successfully created gated project '{title}'. Share the link below.")
+            # Redirect to the dashboard so they can see the new project
+            return redirect("/dashboard/")
+        else:
+            messages.error(request, "Title and Slug are required.")
+
+    return render(request, "dashboard_add_gated.html")
+
+# ---- Custom Edit Ebook View ----
+@staff_member_required
+def dashboard_edit_ebook(request, pk):
+    try:
+        ebook = Ebook.objects.get(pk=pk)
+    except Ebook.DoesNotExist:
+        messages.error(request, "Ebook not found.")
+        return redirect("/dashboard/")
+
+    if request.method == "POST":
+        ebook.title = request.POST.get("title")
+        ebook.description = request.POST.get("description")
+        ebook.is_free = request.POST.get("is_free") == "on"
+        ebook.is_ongoing = request.POST.get("is_ongoing") == "on"
+        ebook.series_name = request.POST.get("series_name")
+        ebook.chapter_number = request.POST.get("chapter_number", 1)
+        is_ongoing = request.POST.get("is_ongoing") == "on"
+        
+        # Only update files if new ones were uploaded
+        if request.FILES.get("cover"):
+            ebook.cover = request.FILES.get("cover")
+        if request.FILES.get("file"):
+            ebook.file = request.FILES.get("file")
+            
+        ebook.save()
+        messages.success(request, f"Successfully updated '{ebook.title}'.")
+        return redirect("/dashboard/")
+
+    return render(request, "dashboard_edit_ebook.html", {"ebook": ebook})
+
+
+# ---- Reader Mode ----
+def read_ebook(request, pk):
+    from django.shortcuts import render, get_object_or_404
+    from access.models import Ebook
+    ebook = get_object_or_404(Ebook, pk=pk)
+    
+    # Detect tone
+    tone = "tech"
+    desc_lower = (ebook.title + " " + ebook.description).lower()
+    if any(word in desc_lower for word in ["business", "finance", "money", "trust", "ledger"]):
+        tone = "business"
+    elif any(word in desc_lower for word in ["story", "novel", "life", "adventure", "creative"]):
+        tone = "creative"
+        
+    # Find the next chapter
+    next_chapter = None
+    if ebook.series_name:
+        next_chapter = Ebook.objects.filter(
+            series_name=ebook.series_name,
+            chapter_number__gt=ebook.chapter_number
+        ).order_by("chapter_number").first()
+        
+    return render(request, "reader.html", {
+        "ebook": ebook, 
+        "tone": tone,
+        "next_chapter": next_chapter
+    })
 

@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% block title %}Edit Ebook — Dashboard{% endblock %}
+
+{% block content %}
+<section><div class="wrap" style="max-width:640px; margin-top: 40px;" data-reveal>
+  
+  <div style="margin-bottom: 24px;">
+    <a href="/dashboard/" class="mono" style="font-size: 0.85rem; color: var(--mut); text-decoration: none;">← Back to Dashboard</a>
+  </div>
+
+  <div class="eyebrow">Control Center</div>
+  <h1 style="font-size: 2rem; margin-bottom: 24px;">Edit Ebook</h1>
+
+  {% if messages %}
+    {% for message in messages %}
+      <div class="card" style="border-color: {% if message.tags == 'success' %}var(--ok){% else %}var(--warn){% endif %}; padding: 16px; margin-bottom: 24px;">
+        <p style="margin: 0; color: {% if message.tags == 'success' %}var(--ok){% else %}var(--warn){% endif %};">{{ message }}</p>
+      </div>
+    {% endfor %}
+  {% endif %}
+
+  <div class="card" style="padding: 32px;">
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      
+      <label for="title">Book Title</label>
+      <input type="text" name="title" id="title" required value="{{ ebook.title }}">
+
+      <label for="description">Description</label>
+      <textarea name="description" id="description" rows="4" required>{{ ebook.description }}</textarea>
+
+      {% if ebook.cover %}
+        <div style="margin: 16px 0;">
+          <p class="mono" style="font-size: 0.75rem; color: var(--mut); margin-bottom: 8px;">CURRENT COVER:</p>
+          <img src="{{ ebook.cover.url }}" style="height: 120px; border-radius: var(--r-sm); border: 1px solid var(--line);">
+        </div>
+      {% endif %}
+
+            <div class="grid g2" style="gap: 16px; margin-bottom: 16px;">
+        <div>
+          <label for="series_name">Series Name (Optional)</label>
+          <input type="text" name="series_name" id="series_name" value="{{ ebook.series_name|default:'' }}" placeholder="e.g. Digital Trust Series">
+        </div>
+        <div>
+          <label for="chapter_number">Chapter Number</label>
+          <input type="number" name="chapter_number" id="chapter_number" value="{{ ebook.chapter_number|default:1 }}" min="1">
+        </div>
+      </div>
+<label for="cover">Replace Cover Image (Optional)</label>
+      <input type="file" name="cover" id="cover" accept="image/*" style="padding: 8px; background: var(--bg-2);">
+
+      {% if ebook.file %}
+        <div style="margin: 16px 0;">
+          <p class="mono" style="font-size: 0.75rem; color: var(--mut); margin-bottom: 8px;">CURRENT FILE:</p>
+          <a href="{{ ebook.file.url }}" target="_blank" class="btn" style="font-size: 0.8rem;">View Current PDF/EPUB</a>
+        </div>
+      {% endif %}
+
+      <label for="file">Replace Ebook File (Optional)</label>
+      <input type="file" name="file" id="file" accept=".pdf,.epub" style="padding: 8px; background: var(--bg-2);">
+
+      <div style="display: flex; align-items: center; gap: 12px; margin: 24px 0;">
+        <input type="checkbox" name="is_free" id="is_free" {% if ebook.is_free %}checked{% endif %} style="width: auto; accent-color: var(--acc);">
+        <label for="is_free" style="margin: 0; cursor: pointer;">Make this ebook free to download</label>
+      </div>
+
+      <button type="submit" class="btn p" style="width: 100%; justify-content: center; padding: 16px; font-size: 1rem;">Save Changes</button>
+    </form>
+  </div>
+
+</div></section>
+{% endblock %}
+
+

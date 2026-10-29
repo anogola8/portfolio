@@ -102,3 +102,17 @@ class AccessLogAdmin(admin.ModelAdmin):
     date_hierarchy = "at"
     readonly_fields = ("project", "at")
 
+from .models import ProjectGated, AccessLog, Ebook, StoryChapter
+
+@admin.register(Ebook)
+class EbookAdmin(admin.ModelAdmin):
+    list_display = ("title", "series_name", "chapter_number", "is_free", "created")
+    search_fields = ("title", "description")
+    prepopulated_fields = {"title": ("title",)} # Not strictly necessary, but helpful
+
+
+@admin.register(StoryChapter)
+class StoryChapterAdmin(admin.ModelAdmin):
+    list_display = ("series_name", "chapter_number", "title", "is_published")
+    list_filter = ("series_name", "is_published")
+    search_fields = ("title", "content")
