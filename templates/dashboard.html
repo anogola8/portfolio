@@ -3,6 +3,21 @@
 
 {% block content %}
 <section><div class="wrap" data-reveal>
+
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; background: var(--panel-2); padding: 16px; border-radius: var(--r-md); border: 1px solid var(--line);">
+  <div>
+    <span class="mono" style="font-size: 0.8rem; color: var(--ok);">● SECURE SESSION ACTIVE</span>
+    <span style="margin-left: 12px; font-size: 0.9rem; color: var(--mut);">Logged in as <strong>{{ user.username }}</strong></span>
+  </div>
+  <div style="display: flex; gap: 12px;">
+    <a href="/" class="btn" style="padding: 8px 16px; font-size: 0.85rem;">View Public Site ↗</a>
+    <form method="post" action="{% url 'logout' %}" style="margin: 0;">
+      {% csrf_token %}
+      <button type="submit" class="btn" style="padding: 8px 16px; font-size: 0.85rem; border-color: var(--warn); color: var(--warn);">Log Out</button>
+    </form>
+  </div>
+</div>
+
 <div class="eyebrow">Control Center</div>
 <h1 style="font-size:clamp(2rem,5vw,3rem)">Dashboard</h1>
 <p style="color:var(--mut);margin-bottom:2em">Manage your content, ebooks, and gated projects from one place.</p>

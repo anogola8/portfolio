@@ -88,10 +88,6 @@ LOGIN_URL = '/manage-secret/'
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 
-# ==========================================
-# SUPABASE STORAGE SETTINGS (Free, No Card)
-# ==========================================
-INSTALLED_APPS.append("django_supabase_storage")
 
 SUPABASE_URL = os.environ.get("SUPABASE_URL")
 SUPABASE_KEY = os.environ.get("SUPABASE_SERVICE_KEY") # Use service key for uploads
@@ -110,3 +106,37 @@ STORAGES = {
         "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
     },
 }
+
+
+# ==========================================
+# SUPABASE S3 STORAGE CONFIG
+# ==========================================
+INSTALLED_APPS.append("storages")
+
+AWS_ACCESS_KEY_ID = os.environ.get("SUPABASE_ACCESS_KEY")
+AWS_SECRET_ACCESS_KEY = os.environ.get("SUPABASE_SECRET_KEY")
+AWS_STORAGE_BUCKET_NAME = os.environ.get("SUPABASE_BUCKET", "media")
+AWS_S3_ENDPOINT_URL = os.environ.get("SUPABASE_ENDPOINT")  # e.g., https://xyz.supabase.co/storage/v1/s3
+AWS_S3_REGION_NAME = os.environ.get("SUPABASE_REGION", "us-east-1") # e.g., us-east-1
+AWS_S3_ADDRESSING_STYLE = "path"  # Required for Supabase S3
+AWS_QUERYSTRING_AUTH = False  # Ensures public URLs
+
+STORAGES = {
+    "default": {
+        "BACKEND": "storages.backends.s3.S3Storage",
+        "OPTIONS": {
+            "access_key": AWS_ACCESS_KEY_ID,
+            "secret_key": AWS_SECRET_ACCESS_KEY,
+            "bucket_name": AWS_STORAGE_BUCKET_NAME,
+            "endpoint_url": AWS_S3_ENDPOINT_URL,
+            "region_name": AWS_S3_REGION_NAME,
+            "addressing_style": "path",
+            "querystring_auth": False,
+        },
+    },
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}
+
+MEDIA_URL = f"{AWS_S3_ENDPOINT_URL}/{AWS_STORAGE_BUCKET_NAME}/"

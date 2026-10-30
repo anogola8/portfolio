@@ -26,6 +26,7 @@ urlpatterns = [
     path("notes/", views.notes, name="notes"),
     path("notes/<slug:slug>/", views.note, name="note"),
     path("library/", views.library, name="library"),
+    path("debug-media/", views.debug_media, name="debug_media"),
     path("read/<int:pk>/", views.read_ebook, name="read_ebook"),
     path("dashboard/", views.dashboard, name="dashboard"),
     path("dashboard/add-ebook/", views.dashboard_add_ebook, name="dashboard_add_ebook"),

@@ -345,3 +345,32 @@ def read_ebook(request, pk):
         "next_chapter": next_chapter
     })
 
+
+
+# ---- TEMPORARY DEBUG VIEW ----
+from django.http import HttpResponse
+from django.contrib.admin.views.decorators import staff_member_required
+from access.models import Ebook
+import os
+
+@staff_member_required
+def debug_media(request):
+    html = "<h1>Media Debug Info</h1>"
+    html += f"<p><strong>MEDIA_URL:</strong> {os.environ.get('MEDIA_URL', 'Not set')}</p>"
+    html += f"<p><strong>AWS_STORAGE_BUCKET_NAME:</strong> {os.environ.get('AWS_STORAGE_BUCKET_NAME', 'Not set')}</p>"
+    
+    ebooks = Ebook.objects.all()
+    if not ebooks:
+        html += "<p>No ebooks in database.</p>"
+    else:
+        html += "<h2>Ebooks:</h2><ul>"
+        for e in ebooks:
+            cover_url = e.cover.url if e.cover else "No cover"
+            file_url = e.file.url if e.file else "No file"
+            
+            html += f"<li><strong>{e.title}</strong><br>"
+            html += f"Cover URL: <code>{cover_url}</code><br>"
+            html += f"File URL: <code>{file_url}</code></li>"
+        html += "</ul>"
+        
+    return HttpResponse(html)
