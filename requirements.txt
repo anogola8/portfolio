@@ -4,3 +4,4 @@ requests>=2.31
 Pillow>=10.0
 gunicorn>=21.0
 whitenoise>=6.0
+django-supabase-storage>=1.0

@@ -86,3 +86,27 @@ LOGIN_URL = '/manage-secret/'
 
 # WhiteNoise for serving static files on Render
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+
+
+# ==========================================
+# SUPABASE STORAGE SETTINGS (Free, No Card)
+# ==========================================
+INSTALLED_APPS.append("django_supabase_storage")
+
+SUPABASE_URL = os.environ.get("SUPABASE_URL")
+SUPABASE_KEY = os.environ.get("SUPABASE_SERVICE_KEY") # Use service key for uploads
+SUPABASE_BUCKET = "media"
+
+STORAGES = {
+    "default": {
+        "BACKEND": "django_supabase_storage.SupabaseMediaStorage",
+        "OPTIONS": {
+            "supabase_url": SUPABASE_URL,
+            "supabase_key": SUPABASE_KEY,
+            "bucket_name": SUPABASE_BUCKET,
+        },
+    },
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}
