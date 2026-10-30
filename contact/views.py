@@ -227,12 +227,21 @@ from django.contrib import messages
 
 @staff_member_required
 def dashboard_add_ebook(request):
+    import os
+    from django.conf import settings
+    covers_dir = os.path.join(settings.BASE_DIR, "static", "img", "covers")
+    static_covers = []
+    if os.path.exists(covers_dir):
+        static_covers = [f for f in os.listdir(covers_dir) if f.lower().endswith((".png", ".jpg", ".jpeg", ".webp"))]
+
     if request.method == "POST":
         title = request.POST.get("title")
         description = request.POST.get("description")
         is_free = request.POST.get("is_free") == "on"
         is_ongoing = request.POST.get("is_ongoing") == "on"
         series_name = request.POST.get("series_name")
+        static_cover = request.POST.get("static_cover")
+        content = request.POST.get("content")
         chapter_number = request.POST.get("chapter_number", 1)
         cover = request.FILES.get("cover")
         file = request.FILES.get("file")
@@ -244,6 +253,8 @@ def dashboard_add_ebook(request):
                 is_free=is_free,
                 is_ongoing=is_ongoing,
                 series_name=series_name,
+                static_cover=static_cover,
+                content=content,
                 chapter_number=chapter_number,
                 cover=cover,
                 file=file
@@ -254,7 +265,7 @@ def dashboard_add_ebook(request):
         else:
             messages.error(request, "Title and description are required.")
 
-    return render(request, "dashboard_add_ebook.html")
+    return render(request, "dashboard_add_ebook.html", {"static_covers": static_covers})
 
 
 # ---- Custom Add Gated Project View ----
@@ -301,6 +312,9 @@ def dashboard_edit_ebook(request, pk):
         ebook.is_free = request.POST.get("is_free") == "on"
         ebook.is_ongoing = request.POST.get("is_ongoing") == "on"
         ebook.series_name = request.POST.get("series_name")
+        static_cover = request.POST.get("static_cover")
+        ebook.content = request.POST.get("content")
+        content = request.POST.get("content")
         ebook.chapter_number = request.POST.get("chapter_number", 1)
         is_ongoing = request.POST.get("is_ongoing") == "on"
         

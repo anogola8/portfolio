@@ -40,7 +40,23 @@
           <input type="number" name="chapter_number" id="chapter_number" value="1" min="1">
         </div>
       </div>
-<label for="cover">Cover Image (Optional)</label>
+
+      <label for="content" style="margin-top: 24px; display: block;">Book Text (Read Online)</label>
+      <textarea name="content" id="content" rows="8" placeholder="Write your book or chapter here. Leave blank if you are uploading a PDF instead." style="font-family: var(--serif); font-size: 1rem; line-height: 1.6;"></textarea>
+      <p class="note" style="margin-top: 4px;">This text will be displayed in the immersive Reader Mode.</p>
+    
+
+      <label for="static_cover" style="margin-top: 24px; display: block;">Cover Image (From Static Folder)</label>
+      <select name="static_cover" id="static_cover" style="padding: 10px; background: var(--bg-2); width: 100%;">
+        <option value="">-- No Cover / Use Upload Below --</option>
+        {% for img in static_covers %}
+          <option value="{{ img }}">{{ img }}</option>
+        {% endfor %}
+      </select>
+      <p class="note" style="margin-top: 4px;">Drop new covers into <code>static/img/covers/</code> and push to Git to see them here.</p>
+    
+
+      <label for="cover" style="display: block; margin-top: 16px;" data-renamed="1">Cover Image (Optional)</label>
       <input type="file" name="cover" id="cover" accept="image/*" style="padding: 8px; background: var(--bg-2);">
       <p class="note" style="margin-top: 4px;">Best results with a 3:4 aspect ratio image (e.g. 600x800px).</p>
 
