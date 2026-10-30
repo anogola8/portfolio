@@ -26,7 +26,8 @@ if ".onrender.com" not in ALLOWED_HOSTS:
 INSTALLED_APPS = [
     "django.contrib.admin", "django.contrib.auth", "django.contrib.contenttypes",
     "django.contrib.sessions", "django.contrib.messages",
-    "django.contrib.staticfiles", "django.contrib.sitemaps", "access", "contact",
+    "django.contrib.staticfiles",
+    "storages", "django.contrib.sitemaps", "access", "contact",
 ]
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -88,11 +89,8 @@ LOGIN_URL = '/manage-secret/'
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 
-# ==========================================
-# STORAGE — Supabase S3 (django-storages)
-# ==========================================
-INSTALLED_APPS.append("storages")
 
+# ==========================================
 AWS_ACCESS_KEY_ID = os.environ.get("SUPABASE_ACCESS_KEY")
 AWS_SECRET_ACCESS_KEY = os.environ.get("SUPABASE_SECRET_KEY")
 AWS_STORAGE_BUCKET_NAME = os.environ.get("SUPABASE_BUCKET", "media")
@@ -112,3 +110,28 @@ STORAGES = {
 
 if AWS_S3_ENDPOINT_URL and AWS_STORAGE_BUCKET_NAME:
     MEDIA_URL = f"{AWS_S3_ENDPOINT_URL.rstrip('/')}/{AWS_STORAGE_BUCKET_NAME}/"
+
+# ==========================================
+# STORAGE — Supabase S3 (Corrected)
+# ==========================================
+AWS_ACCESS_KEY_ID = os.environ.get("SUPABASE_ACCESS_KEY")
+AWS_SECRET_ACCESS_KEY = os.environ.get("SUPABASE_SECRET_KEY")
+AWS_STORAGE_BUCKET_NAME = os.environ.get("SUPABASE_BUCKET", "media")
+AWS_S3_ENDPOINT_URL = os.environ.get("SUPABASE_ENDPOINT")
+AWS_S3_REGION_NAME = os.environ.get("SUPABASE_REGION", "us-east-1")
+AWS_S3_ADDRESSING_STYLE = "path"
+AWS_QUERYSTRING_AUTH = False
+
+# THIS IS THE CRITICAL FIX: Tell Django to use the public URL, not the S3 API
+# It must NOT include https://
+AWS_S3_CUSTOM_DOMAIN = f"{os.environ.get('SUPABASE_PROJECT_REF')}.supabase.co/storage/v1/object/public/{AWS_STORAGE_BUCKET_NAME}"
+
+STORAGES = {
+    "default": {
+        "BACKEND": "storages.backends.s3.S3Storage",
+    },
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}
+
