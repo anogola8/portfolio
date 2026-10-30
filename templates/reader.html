@@ -3,70 +3,161 @@
 
 {% block content %}
 <style>
+  /* 1. Hide the main site UI for full immersion */
   header.nav, footer, #fab-container, #bgCanvas { display: none !important; }
   
+  /* 2. Set the Theme based on the Tone */
   :root {
     {% if tone == "business" %}
-      --reader-bg: #1a1815; --reader-panel: #26221c; --reader-text: #e8e2d5; --reader-accent: #d4a373;
+      --reader-bg: #1a1815; --reader-panel: #26221c; --reader-text: #e8e2d5; --reader-muted: #9c9287; --reader-accent: #d4a373;
     {% elif tone == "creative" %}
-      --reader-bg: #18181b; --reader-panel: #27272a; --reader-text: #f4f4f5; --reader-accent: #fbbf24;
+      --reader-bg: #18181b; --reader-panel: #27272a; --reader-text: #f4f4f5; --reader-muted: #a1a1aa; --reader-accent: #fbbf24;
     {% else %}
-      --reader-bg: #0b1220; --reader-panel: #111c33; --reader-text: #e9eef8; --reader-accent: #3fe0f0;
+      --reader-bg: #0b1220; --reader-panel: #111c33; --reader-text: #e9eef8; --reader-muted: #8895ab; --reader-accent: #3fe0f0;
     {% endif %}
   }
 
   body { background-color: var(--reader-bg) !important; color: var(--reader-text); transition: background-color 0.5s ease; }
 
+  /* 3. The Reading Progress Bar */
+  #progress-bar {
+    position: fixed; top: 0; left: 0; height: 3px; background: var(--reader-accent); width: 0%; z-index: 999;
+    transition: width 0.1s ease;
+  }
+
+  /* 4. Floating Toolbar */
   .reader-toolbar {
     position: fixed; top: 24px; left: 50%; transform: translateX(-50%);
     background: var(--reader-panel); border: 1px solid rgba(255,255,255,0.1);
     border-radius: 50px; padding: 8px 16px; display: flex; align-items: center; gap: 16px;
     z-index: 100; box-shadow: 0 20px 40px -10px rgba(0,0,0,0.8); backdrop-filter: blur(10px);
   }
-
-  .reader-toolbar .title { font-family: var(--mono); font-size: 0.85rem; color: var(--reader-text); max-width: 300px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-
-  .btn-reader {
-    background: transparent; border: 1px solid rgba(255,255,255,0.2); color: var(--reader-text);
-    padding: 6px 12px; border-radius: 20px; font-size: 0.8rem; cursor: pointer;
-    transition: all 0.2s ease; text-decoration: none;
-  }
+  .reader-toolbar .title { font-family: var(--mono); font-size: 0.85rem; color: var(--reader-muted); max-width: 300px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .btn-reader { background: transparent; border: 1px solid rgba(255,255,255,0.15); color: var(--reader-text); padding: 6px 12px; border-radius: 20px; font-size: 0.8rem; cursor: pointer; transition: all 0.2s ease; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; }
   .btn-reader:hover { border-color: var(--reader-accent); color: var(--reader-accent); }
   .btn-reader.primary { background: var(--reader-accent); color: #000; border-color: var(--reader-accent); font-weight: bold; }
   .btn-reader.primary:hover { opacity: 0.9; color: #000; }
-
   .reader-toolbar .divider { width: 1px; height: 20px; background: rgba(255,255,255,0.1); }
 
+  /* 5. The Professional Text Layout */
+  .text-reader-container {
+    max-width: 680px; margin: 0 auto; padding: 140px 24px 160px;
+    animation: fadeIn 0.8s ease;
+  }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: none; } }
+
+  /* Typography */
+  .text-reader {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 1.3rem;
+    line-height: 1.85;
+    letter-spacing: -0.01em;
+    color: var(--reader-text);
+  }
+  
+  /* Chapter Header */
+  .text-reader .meta {
+    font-family: var(--mono); font-size: 0.75rem; color: var(--reader-accent); text-transform: uppercase;
+    letter-spacing: 0.15em; text-align: center; margin-bottom: 1.5rem;
+  }
+  .text-reader h1 {
+    font-family: Georgia, serif; font-size: 2.8rem; margin-bottom: 3rem; color: var(--reader-text); line-height: 1.15;
+    text-align: center; letter-spacing: -0.02em;
+  }
+
+  /* Paragraphs and Drop Cap */
+  .text-reader p { margin-bottom: 1.6em; text-align: justify; }
+  
+  /* Drop cap on the first paragraph */
+  .text-reader p:first-of-type::first-letter {
+    font-size: 4.5rem;
+    float: left;
+    line-height: 0.8;
+    margin-right: 0.1em;
+    margin-top: 0.05em;
+    color: var(--reader-accent);
+    font-family: Georgia, serif;
+  }
+
+  /* Fix for lists if they exist in the text */
+  .text-reader ul, .text-reader ol { margin-bottom: 1.6em; padding-left: 20px; }
+  .text-reader li { margin-bottom: 0.5em; }
+
+  /* PDF Viewer Fallback */
   #pdf-container { width: 100%; height: 100vh; border: none; margin-top: 0; }
 
   @media (max-width: 600px) {
     .reader-toolbar .title, .reader-toolbar .divider { display: none; }
     .reader-toolbar { top: 12px; padding: 6px 10px; gap: 8px; }
+    .text-reader-container { padding-top: 100px; }
+    .text-reader { font-size: 1.15rem; line-height: 1.7; }
+    .text-reader h1 { font-size: 2.2rem; }
+    .text-reader p { text-align: left; }
   }
 </style>
 
+<!-- Reading Progress Bar -->
+<div id="progress-bar"></div>
+
+<!-- Floating Toolbar -->
 <div class="reader-toolbar">
   <a href="/library/" class="btn-reader">← Back</a>
   <div class="divider"></div>
-  <span class="title">📖 {{ ebook.title }}</span>
+  <span class="title">{{ ebook.title }}</span>
   <div class="divider"></div>
-  
-  {% if ebook.file %}
-    <a href="{{ ebook.file.url }}" download class="btn-reader">⬇ Save</a>
-  {% endif %}
-  
   {% if next_chapter %}
     <a href="/read/{{ next_chapter.id }}/" class="btn-reader primary">Next Chapter →</a>
   {% endif %}
 </div>
 
-<div style="background: var(--reader-bg);">
-  {% if ebook.file %}
-    <iframe id="pdf-container" src="{{ ebook.file.url }}#toolbar=0&navpanes=0&scrollbar=0&view=FitH"></iframe>
-  {% else %}
-    <div style="height: 100vh; display: flex; align-items: center; justify-content: center; color: var(--reader-text);">
-      <p class="mono">No file attached to this book yet.</p>
+{% if ebook.content %}
+  <!-- Professional Text Reader -->
+  <div class="text-reader-container">
+    <div class="text-reader">
+      <div class="meta">
+        {% if ebook.series_name %}{{ ebook.series_name }} · {% endif %}Chapter {{ ebook.chapter_number }}
+      </div>
+      <h1>{{ ebook.title }}</h1>
+      
+      <!-- Render paragraphs with linebreaks -->
+      <div>
+        {{ ebook.content|linebreaks }}
+      </div>
+      
+      <!-- End of chapter navigation -->
+      {% if next_chapter %}
+        <div style="margin-top: 60px; padding-top: 40px; border-top: 1px solid rgba(255,255,255,0.1); text-align: center;">
+          <p style="font-family: var(--mono); font-size: 0.85rem; color: var(--reader-muted); margin-bottom: 20px;">End of Chapter {{ ebook.chapter_number }}</p>
+          <a href="/read/{{ next_chapter.id }}/" class="btn-reader primary" style="padding: 12px 24px; font-size: 1rem;">Continue to Chapter {{ next_chapter.chapter_number }} →</a>
+        </div>
+      {% else %}
+        <div style="margin-top: 60px; padding-top: 40px; border-top: 1px solid rgba(255,255,255,0.1); text-align: center;">
+          <p style="font-family: var(--mono); font-size: 0.85rem; color: var(--reader-muted);">End of available chapters.</p>
+          <a href="/library/" class="btn-reader" style="margin-top: 20px;">Return to Library</a>
+        </div>
+      {% endif %}
     </div>
-  {% endif %}
-</div>
+  </div>
+
+{% elif ebook.file %}
+  <!-- PDF Viewer -->
+  <div style="background: var(--reader-bg);">
+    <iframe id="pdf-container" src="{{ ebook.file.url }}#toolbar=0&navpanes=0&scrollbar=0&view=FitH"></iframe>
+  </div>
+{% else %}
+  <div style="height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--reader-text);">
+    <p class="mono">No content attached to this chapter.</p>
+    <a href="/library/" class="btn-reader" style="margin-top: 16px;">Back to Library</a>
+  </div>
+{% endif %}
+
+<script>
+  // Scroll Progress Bar Logic
+  window.addEventListener('scroll', function() {
+    var winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+    var height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+    var scrolled = (winScroll / height) * 100;
+    document.getElementById('progress-bar').style.width = scrolled + '%';
+  });
+</script>
 {% endblock %}
